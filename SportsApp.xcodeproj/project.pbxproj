@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D848A922BD858BF006BF588 /* FavoriteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D848A912BD858BF006BF588 /* FavoriteTableViewController.swift */; };
 		7DAF35B02BD7F765007E18C1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF35AF2BD7F765007E18C1 /* AppDelegate.swift */; };
 		7DAF35B22BD7F765007E18C1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF35B12BD7F765007E18C1 /* SceneDelegate.swift */; };
 		7DAF35B42BD7F765007E18C1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF35B32BD7F765007E18C1 /* ViewController.swift */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		0A4A23199319494A494B34DF /* Pods-SportsApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SportsApp.release.xcconfig"; path = "Target Support Files/Pods-SportsApp/Pods-SportsApp.release.xcconfig"; sourceTree = "<group>"; };
+		7D848A912BD858BF006BF588 /* FavoriteTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTableViewController.swift; sourceTree = "<group>"; };
 		7DAF35AC2BD7F765007E18C1 /* SportsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SportsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DAF35AF2BD7F765007E18C1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7DAF35B12BD7F765007E18C1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 				7DAF35C82BD7FDC2007E18C1 /* SportsViewController.swift */,
 				7DAF35CC2BD81F55007E18C1 /* LeaguesTableViewController.swift */,
 				7DAF35CE2BD831F5007E18C1 /* League.swift */,
+				7D848A912BD858BF006BF588 /* FavoriteTableViewController.swift */,
 			);
 			path = SportsApp;
 			sourceTree = "<group>";
@@ -223,6 +226,7 @@
 			files = (
 				7DAF35C72BD7FCFA007E18C1 /* SportsCollectionViewCell.swift in Sources */,
 				7DAF35B42BD7F765007E18C1 /* ViewController.swift in Sources */,
+				7D848A922BD858BF006BF588 /* FavoriteTableViewController.swift in Sources */,
 				7DAF35CF2BD831F5007E18C1 /* League.swift in Sources */,
 				7DAF35B02BD7F765007E18C1 /* AppDelegate.swift in Sources */,
 				7DAF35C92BD7FDC2007E18C1 /* SportsViewController.swift in Sources */,
