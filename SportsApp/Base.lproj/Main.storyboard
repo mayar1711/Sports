@@ -100,10 +100,10 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sports" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W3g-Xr-PAB">
-                                <rect key="frame" x="133" y="129" width="116" height="34"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="All Sports" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W3g-Xr-PAB">
+                                <rect key="frame" x="135" y="119" width="129" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="28"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -138,11 +138,11 @@
             </objects>
             <point key="canvasLocation" x="1419" y="-240"/>
         </scene>
-        <!--Item-->
+        <!--Sports-->
         <scene sceneID="TbN-W6-f9n">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nwx-Pq-c6t" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="Ss9-5E-prX"/>
+                    <tabBarItem key="tabBarItem" title="Sports" selectedImage="figure.disc.sports" catalog="system" id="Ss9-5E-prX"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="hb2-pP-Irz">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
@@ -157,11 +157,11 @@
             </objects>
             <point key="canvasLocation" x="2307.6335877862593" y="-600"/>
         </scene>
-        <!--Item-->
+        <!--Favorite-->
         <scene sceneID="gbm-nB-wEg">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0cZ-gN-GRa" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="hmx-0d-qiK"/>
+                    <tabBarItem key="tabBarItem" title="Favorite" selectedImage="heart" catalog="system" id="hmx-0d-qiK"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="puc-ri-q6l">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
@@ -179,6 +179,8 @@
     </scenes>
     <resources>
         <image name="1" width="234" height="215"/>
+        <image name="figure.disc.sports" catalog="system" width="128" height="108"/>
+        <image name="heart" catalog="system" width="128" height="107"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

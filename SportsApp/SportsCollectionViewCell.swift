@@ -14,13 +14,6 @@ class SportsCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var sportsName: UILabel!
     
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        sportsImage.contentMode = .scaleAspectFill
-        sportsImage.clipsToBounds = true 
-    }
 
     
 }
