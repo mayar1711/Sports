@@ -19,6 +19,7 @@ class SportsViewController: UIViewController , UICollectionViewDataSource , UICo
         sportCollection.dataSource = self
         sportCollection.delegate = self
 
+      //  self.title = "Sports"
 
     }
     
@@ -40,7 +41,6 @@ class SportsViewController: UIViewController , UICollectionViewDataSource , UICo
 
         cell.sportsName.text = sportsNames[indexPath.item]
         cell.sportsImage.image = UIImage(named: sportsImages[indexPath.item])
-
         return cell
     }
     
@@ -48,5 +48,11 @@ class SportsViewController: UIViewController , UICollectionViewDataSource , UICo
         return CGSize(width: 150, height: 240)
     }
 
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedSportName = sportsNames[indexPath.item]
+        let leaguesViewController = LeaguesTableViewController()
+        leaguesViewController.selectedSport = selectedSportName
+        self.navigationController?.pushViewController(leaguesViewController, animated: true)
+    }
+
 }
