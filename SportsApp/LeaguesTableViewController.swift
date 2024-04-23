@@ -15,7 +15,7 @@ class LeaguesTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+       fetchData(for: " ")
     }
 
     func fetchData(for sport: String) {
