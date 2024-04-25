@@ -20,6 +20,7 @@
 		7DAF35CD2BD81F55007E18C1 /* LeaguesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF35CC2BD81F55007E18C1 /* LeaguesTableViewController.swift */; };
 		7DAF35CF2BD831F5007E18C1 /* League.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF35CE2BD831F5007E18C1 /* League.swift */; };
 		D4EC3D3F2BD8EF9400C9331B /* TestGitHubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EC3D3E2BD8EF9400C9331B /* TestGitHubViewController.swift */; };
+		D4EC3D412BD92CB300C9331B /* FavoriteCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EC3D402BD92CB300C9331B /* FavoriteCoreData.swift */; };
 		E388C7E1C83158A0D7A3AB00 /* Pods_SportsApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0A0879C3DF7192FDE86FBCA /* Pods_SportsApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 		8645BB3EC9E2E6690EEB6B75 /* Pods-SportsApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SportsApp.debug.xcconfig"; path = "Target Support Files/Pods-SportsApp/Pods-SportsApp.debug.xcconfig"; sourceTree = "<group>"; };
 		A0A0879C3DF7192FDE86FBCA /* Pods_SportsApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SportsApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4EC3D3E2BD8EF9400C9331B /* TestGitHubViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGitHubViewController.swift; sourceTree = "<group>"; };
+		D4EC3D402BD92CB300C9331B /* FavoriteCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCoreData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				7DAF35CE2BD831F5007E18C1 /* League.swift */,
 				7D848A912BD858BF006BF588 /* FavoriteTableViewController.swift */,
 				D4EC3D3E2BD8EF9400C9331B /* TestGitHubViewController.swift */,
+				D4EC3D402BD92CB300C9331B /* FavoriteCoreData.swift */,
 			);
 			path = SportsApp;
 			sourceTree = "<group>";
@@ -233,6 +236,7 @@
 				D4EC3D3F2BD8EF9400C9331B /* TestGitHubViewController.swift in Sources */,
 				7DAF35CF2BD831F5007E18C1 /* League.swift in Sources */,
 				7DAF35B02BD7F765007E18C1 /* AppDelegate.swift in Sources */,
+				D4EC3D412BD92CB300C9331B /* FavoriteCoreData.swift in Sources */,
 				7DAF35C92BD7FDC2007E18C1 /* SportsViewController.swift in Sources */,
 				7DAF35BA2BD7F765007E18C1 /* SportsApp.xcdatamodeld in Sources */,
 				7DAF35B22BD7F765007E18C1 /* SceneDelegate.swift in Sources */,
