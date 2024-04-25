@@ -10,7 +10,7 @@ import UIKit
 class SportsViewController: UIViewController , UICollectionViewDataSource , UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
 
     let sportsImages = ["1", "1", "1", "1"]
-    let sportsNames = ["Football", "Basketball", "Tennis", "Volleyball"]
+    let sportsNames = ["Football", "Basketball", "Tennis", "Cricket"]
 
     
     override func viewDidLoad() {

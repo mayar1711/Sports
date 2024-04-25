@@ -7,7 +7,7 @@
 
 import Foundation
 
-class League {
+class League: Decodable {
     let leagueKey: Int
     let leagueName: String
     let countryKey: Int
@@ -15,14 +15,15 @@ class League {
     let leagueLogo: String?
     let countryLogo: String?
     
-    init(leagueKey: Int, leagueName: String, countryKey: Int, countryName: String, leagueLogo: String?, countryLogo: String?) {
-        self.leagueKey = leagueKey
-        self.leagueName = leagueName
-        self.countryKey = countryKey
-        self.countryName = countryName
-        self.leagueLogo = leagueLogo
-        self.countryLogo = countryLogo
+    enum CodingKeys: String, CodingKey {
+        case leagueKey = "league_key"
+        case leagueName = "league_name"
+        case countryKey = "country_key"
+        case countryName = "country_name"
+        case leagueLogo = "league_logo"
+        case countryLogo = "country_logo"
     }
+
 }
 
 

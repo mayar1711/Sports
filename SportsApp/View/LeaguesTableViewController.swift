@@ -7,52 +7,65 @@
 
 import UIKit
 import Alamofire
+import Kingfisher
 
-class LeaguesTableViewController: UITableViewController {
+
+class LeaguesTableViewController: UITableViewController , LeagueView{
+    
+    var leages: League?
+    var presenter: LeaguePresenter!
 
     var selectedSport :String?
-    var leagues: [League] = []
-
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-       fetchData(for: " ")
-    }
-
-    func fetchData(for sport: String) {
-        let urlString = "https://apiv2.allsportsapi.com/football/?met=Leagues&APIkey=130041c3994aa5c5e9a427b128c4e48be1235ae9e3b98bccb25f971282dfcff3"
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "leaguesCell")
+        presenter = LeaguePresenter(view: self)
+        presenter.fetchData(forSport: selectedSport)
+        self.title = "Leagues"
         
-    
-        AF.request(urlString).responseJSON { (response: DataResponse<Any, AFError>) in
-            switch response.result {
-            case .success(let value):
-                if let json = value as? [String: Any], let leaguesData = json["result"] as? [[String: Any]] {
-                    self.leagues = leaguesData.compactMap { League(json: $0) }
-                    self.tableView.reloadData()
-                    
-                    print(self.leagues)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 100
 
-                }
-            case .failure(let error):
-                print("Error fetching data: \(error)")
-            }
-        }
+
+    }
+    
+    
+    func reloadData() {
+        tableView.reloadData()
+        print("done")
+    }
+    
+    func showError(message: String) {
+        print("Error: \(message)")
     }
 
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return presenter.numberOfLeagues()
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+       
         let cell = tableView.dequeueReusableCell(withIdentifier: "leaguesCell", for: indexPath)
+        let league = presenter.league(at: indexPath.row)
+        cell.textLabel?.text = league.leagueName
+        let imageSize = CGSize(width: 50, height: 50)
+        if let imageURL = URL(string: league.leagueLogo ?? "") {
+            cell.imageView?.kf.setImage(with: imageURL)
+            cell.imageView?.frame.size = imageSize
+            cell.imageView?.layer.cornerRadius = imageSize.width / 2
+            cell.imageView?.clipsToBounds = true
 
+    }
 
         return cell
     }
