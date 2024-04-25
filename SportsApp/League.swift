@@ -8,24 +8,22 @@
 import Foundation
 
 class League {
-    let name: String
-    let country: String
-    let logoURL: URL?
-
-    init?(json: [String: Any]) {
-        guard let name = json["league_name"] as? String,
-              let country = json["country_name"] as? String else {
-            return nil
-        }
-
-        self.name = name
-        self.country = country
-
-        if let logoString = json["league_logo"] as? String {
-            self.logoURL = URL(string: logoString)
-        } else {
-            self.logoURL = nil
-        }
+    let leagueKey: Int
+    let leagueName: String
+    let countryKey: Int
+    let countryName: String
+    let leagueLogo: String?
+    let countryLogo: String?
+    
+    init(leagueKey: Int, leagueName: String, countryKey: Int, countryName: String, leagueLogo: String?, countryLogo: String?) {
+        self.leagueKey = leagueKey
+        self.leagueName = leagueName
+        self.countryKey = countryKey
+        self.countryName = countryName
+        self.leagueLogo = leagueLogo
+        self.countryLogo = countryLogo
     }
 }
+
+
 
