@@ -88,23 +88,47 @@
 		7DAF35AE2BD7F765007E18C1 /* SportsApp */ = {
 			isa = PBXGroup;
 			children = (
+				D42CEC352BDA615200DB64AC /* Model */,
+				D42CEC342BDA614000DB64AC /* Presenter */,
+				D42CEC332BDA613500DB64AC /* View */,
 				7DAF35AF2BD7F765007E18C1 /* AppDelegate.swift */,
 				7DAF35B12BD7F765007E18C1 /* SceneDelegate.swift */,
 				7DAF35B32BD7F765007E18C1 /* ViewController.swift */,
-				7DAF35B52BD7F765007E18C1 /* Main.storyboard */,
 				7DAF35BB2BD7F767007E18C1 /* Assets.xcassets */,
-				7DAF35BD2BD7F767007E18C1 /* LaunchScreen.storyboard */,
 				7DAF35C02BD7F767007E18C1 /* Info.plist */,
 				7DAF35B82BD7F765007E18C1 /* SportsApp.xcdatamodeld */,
-				7DAF35C62BD7FCFA007E18C1 /* SportsCollectionViewCell.swift */,
-				7DAF35C82BD7FDC2007E18C1 /* SportsViewController.swift */,
-				7DAF35CC2BD81F55007E18C1 /* LeaguesTableViewController.swift */,
-				7DAF35CE2BD831F5007E18C1 /* League.swift */,
-				7D848A912BD858BF006BF588 /* FavoriteTableViewController.swift */,
-				D4EC3D3E2BD8EF9400C9331B /* TestGitHubViewController.swift */,
-				D4EC3D402BD92CB300C9331B /* FavoriteCoreData.swift */,
 			);
 			path = SportsApp;
+			sourceTree = "<group>";
+		};
+		D42CEC332BDA613500DB64AC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D4EC3D3E2BD8EF9400C9331B /* TestGitHubViewController.swift */,
+				7D848A912BD858BF006BF588 /* FavoriteTableViewController.swift */,
+				7DAF35CC2BD81F55007E18C1 /* LeaguesTableViewController.swift */,
+				7DAF35C82BD7FDC2007E18C1 /* SportsViewController.swift */,
+				7DAF35C62BD7FCFA007E18C1 /* SportsCollectionViewCell.swift */,
+				7DAF35BD2BD7F767007E18C1 /* LaunchScreen.storyboard */,
+				7DAF35B52BD7F765007E18C1 /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		D42CEC342BDA614000DB64AC /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		D42CEC352BDA615200DB64AC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7DAF35CE2BD831F5007E18C1 /* League.swift */,
+				D4EC3D402BD92CB300C9331B /* FavoriteCoreData.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		FB65BF02954A7D62EAE6A8D4 /* Frameworks */ = {
