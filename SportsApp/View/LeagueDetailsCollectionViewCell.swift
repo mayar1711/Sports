@@ -15,6 +15,8 @@ class LeagueDetailsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var team1Name: UILabel!
     @IBOutlet weak var team2Name: UILabel!
     
+    @IBOutlet weak var vsText: UILabel!
+
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -22,6 +24,9 @@ class LeagueDetailsCollectionViewCell: UICollectionViewCell {
         backgroundview!.layer.cornerRadius = 10
         backgroundview!.clipsToBounds = true
         backgroundview!.backgroundColor = UIColor.systemGray3
+        
+        backgroundview.autoresizingMask = [.flexibleHeight,.flexibleWidth]
+        backgroundview.frame = self.bounds
     }
 
 

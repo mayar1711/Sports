@@ -9,11 +9,12 @@ import UIKit
 
 private let reuseIdentifier = "LeaguesDetailsCell"
 
-class LeagueDetailsCollectionViewController: UICollectionViewController {
+class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDetailView {
     
     var sportName:String?
     var leagueKey:Int?
     
+    var leagueDetailPresenter: LeagueDetailPresenter!
     var leagueDetails: [LeagueDetails] = [] 
     
     override func viewDidLoad() {
@@ -30,86 +31,123 @@ class LeagueDetailsCollectionViewController: UICollectionViewController {
             } else {
                 print("League Key is nil")
             }
-        
-    
 
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
         let cellNib = UINib(nibName: "LeagueDetailsCollectionViewCell", bundle: nil)
                 collectionView?.register(cellNib, forCellWithReuseIdentifier: "LeaguesDetailsCell")
         
-//        let headerNib = UINib(nibName: "SectionHeaderView", bundle: nil)
-//            collectionView?.register(headerNib, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "SectionHeaderView")
-                
-                // Configure compositional layout
-                let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
-                    if sectionIndex == 0 {
-                        // First section: Single item layout
-                        return self.createTopSectionLayout()
-                    } else {
-                        // Second section: Vertical layout with one item per row
-                        return self.createSecondSectionLayout()
-                    }
-                }
-                
-                collectionView.collectionViewLayout = layout
-                
-                // Set vertical scrolling
-                if let customFlowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
-                    customFlowLayout.scrollDirection = .vertical
-                }
+        leagueDetailPresenter = LeagueDetailPresenter(view: self)
+        leagueDetailPresenter.fetchData(forSport: sportName, leagueKey: leagueKey)
+        
+
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
+            switch sectionIndex {
+                case 0:
+                    return self.createTopSectionLayout()
+                case 1:
+                    return self.createSecondSectionLayout()
+                case 2:
+                    return self.createThirdSectionLayout()
+                default:
+                    return nil
             }
+        }
+        layout.configuration.interSectionSpacing = 30
+        collectionView.collectionViewLayout = layout
+                
+        if let customFlowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+            customFlowLayout.scrollDirection = .vertical
+            }
+    }
     
     func reloadData() {
-            collectionView.reloadData()
-        }
+        collectionView.reloadData()
+        print("Data fetched.")
+    }
         
-        func showError(message: String) {
-        
-            print("Error: \(message)")
-        }
+    func showError(message: String) {
+        print("Error: \(message)")
+    }
 
             
-            // MARK: - Compositional Layouts
+    // MARK: - Compositional Layouts
             
-            func createTopSectionLayout() -> NSCollectionLayoutSection {
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
-                let section = NSCollectionLayoutSection(group: group)
-                return section
-            }
+    func createTopSectionLayout() -> NSCollectionLayoutSection {
+    
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.98)
+          , heightDimension: .fractionalHeight(1))
+          let item = NSCollectionLayoutItem(layoutSize: itemSize)
+          
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0)
+          , heightDimension: .absolute(150))
+          let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize
+          , subitems: [item])
+              group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0
+              , bottom: 0, trailing: 15)
+              
+          let section = NSCollectionLayoutSection(group: group)
+              section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12
+              , bottom: 50, trailing: 0)
+              section.orthogonalScrollingBehavior = .continuous
+              
+             return section
+    }
+    
+    
+
+    func createSecondSectionLayout() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(120))
+
+        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 10
+
+        return section
+    }
+    
+    func createThirdSectionLayout() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
             
-            func createSecondSectionLayout() -> NSCollectionLayoutSection {
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200)) // Set estimated item height
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(0.2))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 8
+            section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
+            
+            // for horizontal scrolling
+            section.orthogonalScrollingBehavior = .continuous
+            
+            return section
+    }
 
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-                    // Adjust group size to control the height of each group (row)
-                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(150)) // Set estimated group height
 
-                    let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitem: item, count: 1)
 
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.interGroupSpacing = 10
-                
-                return section
-            }
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 2
+        return 3
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
         if section == 0 {
-                    return 1
-                } else {
-                    return 10
-                }
+                return 1
+            } else if section == 1 {
+                return 10
+            } else {
+                return 5
+            }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -117,35 +155,24 @@ class LeagueDetailsCollectionViewController: UICollectionViewController {
     
         // Configure the cell
         if indexPath.section == 0 {
-                    // Configure first section cell
-                    cell.team1Img.image = UIImage(named: "bee")
-                    cell.team2Img.image = UIImage(named: "n")
-                    cell.team1Name.text = "Team A"
-                    cell.team2Name.text = "Team B"
-                } else {
-                    cell.team1Img.image = UIImage(named: "bee")
-                    cell.team2Img.image = UIImage(named: "n")
-                    cell.team1Name.text = "Team A"
-                    cell.team2Name.text = "Team B"
-                }
+            // Configure first section cell
+            cell.team1Img.image = UIImage(named: "bee")
+            cell.team2Img.image = UIImage(named: "n")
+            cell.team1Name.text = "Team A"
+            cell.team2Name.text = "Team B"
+            cell.vsText.text = "VS."
+        } else if indexPath.section == 1 {
+            // Configure second section cell
+            cell.team1Img.image = UIImage(named: "bee")
+            cell.team2Img.image = UIImage(named: "n")
+            cell.team1Name.text = "Team A"
+            cell.team2Name.text = "Team B"
+            cell.vsText.text = "VS."
+        } else {
+            
+            cell.team1Img.image = UIImage(named: "bee")
+            cell.team1Name.text = "Team c"
+        }
         return cell
     }
-    
-//    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-//        if kind == UICollectionView.elementKindSectionHeader {
-//            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeaderView", for: indexPath) as! SectionHeaderView
-//
-//            // Configure header title
-//            if indexPath.section == 0 {
-//                headerView.titleLabel.text = "First Section"
-//            } else {
-//                headerView.titleLabel.text = "Second Section"
-//            }
-//
-//            return headerView
-//        }
-//
-//        return UICollectionReusableView()
-//    }
-
 }

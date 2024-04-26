@@ -27,8 +27,6 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
-
-
     }
     
     
@@ -43,7 +41,6 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
 
     
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
