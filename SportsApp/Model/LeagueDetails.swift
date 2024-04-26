@@ -8,6 +8,7 @@
 import Foundation
 
 class LeagueDetails: Decodable{
+    
     let eventKey: Int?
     let eventDay: String?
     let eventTime: String?
@@ -45,9 +46,8 @@ class LeagueDetails: Decodable{
     }
 }
 
-
 class LeagueDetailsResponse: Decodable{
-    let success: Int
-    let result: [LeagueDetails]
+    let success: Int?
+    let result: [LeagueDetails]?
 }
 

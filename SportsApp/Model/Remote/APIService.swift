@@ -29,7 +29,8 @@ class APIService {
     
     
     func fetchLeaguesDetails(forSport sport: String,forLeagueDetail detail:Int, from dateFrom:String, to dateTo:String, completion: @escaping ([LeagueDetails]?, Error?) -> Void) {
-        let urlString = "\(baseURL)/\(sport.lowercased())/?met=Leagues&APIkey=\(apiKey)&from=\(dateFrom)&to=\(dateTo)&leagueId=\(detail)"
+        let urlString = "\(baseURL)/\(sport.lowercased())/?met=Fixtures&APIkey=\(apiKey)&from=\(dateFrom)&to=\(dateTo)&leagueId=\(detail)"
+        
         
         AF.request(urlString).responseDecodable(of: LeagueDetailsResponse.self) { response in
                 switch response.result {
@@ -37,7 +38,7 @@ class APIService {
                     completion(detailsResponse.result, nil)
                 case .failure(let error):
                     completion(nil, error)
-                }      
+            }      
         }
     }
 }

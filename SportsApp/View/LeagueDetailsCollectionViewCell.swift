@@ -18,6 +18,14 @@ class LeagueDetailsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var vsText: UILabel!
 
     
+    
+    
+    
+    @IBOutlet weak var dayText: UILabel!
+
+    @IBOutlet weak var timeText: UILabel!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Configure appearance of the background view

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 private let reuseIdentifier = "LeaguesDetailsCell"
 
@@ -127,9 +128,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             
             return section
     }
-
-
-
+    
 
     // MARK: UICollectionViewDataSource
 
@@ -143,35 +142,50 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
         // #warning Incomplete implementation, return the number of items
         if section == 0 {
                 return 1
-            } else if section == 1 {
-                return 10
-            } else {
+        } 
+        else if section == 1 {
+            return leagueDetailPresenter.numberOfLeagueDetails()
+        }
+        else {
                 return 5
-            }
+        }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LeaguesDetailsCell", for: indexPath) as! LeagueDetailsCollectionViewCell
     
-        // Configure the cell
         if indexPath.section == 0 {
-            // Configure first section cell
             cell.team1Img.image = UIImage(named: "bee")
             cell.team2Img.image = UIImage(named: "n")
             cell.team1Name.text = "Team A"
             cell.team2Name.text = "Team B"
             cell.vsText.text = "VS."
         } else if indexPath.section == 1 {
-            // Configure second section cell
-            cell.team1Img.image = UIImage(named: "bee")
-            cell.team2Img.image = UIImage(named: "n")
-            cell.team1Name.text = "Team A"
-            cell.team2Name.text = "Team B"
-            cell.vsText.text = "VS."
-        } else {
             
+            let leagueDetail = leagueDetailPresenter.leagueDetail(at: indexPath.item)
+            cell.team1Name.text = leagueDetail?.eventHomeTeam ?? "not selected"
+            cell.team2Name.text = leagueDetail?.eventAwayTeam ?? "not selected"
+            cell.vsText.text = "VS."
+            
+            let imageSize = CGSize(width: 50, height: 50)
+            if let awayTeamLogoURL = URL(string: leagueDetail?.awayTeamLogo ?? "bee") {
+              cell.team2Img.kf.setImage(with: awayTeamLogoURL)
+            }
+            if let homeTeamLogoURL = URL(string: leagueDetail?.homeTeamLogo ?? "bee") {
+                cell.team1Img.kf.setImage(with: homeTeamLogoURL)
+            }
+            
+            if let homeTeamLogoURL = leagueDetail?.homeTeamLogo, let url = URL(string: homeTeamLogoURL) {
+                cell.team1Img.kf.setImage(with: url)
+            }
+            
+            if let awayTeamLogoURL = leagueDetail?.awayTeamLogo, let url = URL(string: awayTeamLogoURL) {
+                cell.team2Img.kf.setImage(with: url)
+            }
+        } else {
             cell.team1Img.image = UIImage(named: "bee")
             cell.team1Name.text = "Team c"
+            cell.vsText.text = ""
         }
         return cell
     }

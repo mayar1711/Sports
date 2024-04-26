@@ -40,11 +40,18 @@ class LeagueDetailPresenter{
                         if let eventAwayTeam = detail.eventAwayTeam {
                             detailsString += ", Away Team: \(eventAwayTeam)"
                         }
+                        if let homeTeamLogo = detail.homeTeamLogo {
+                            detailsString += ", Home Team Logo URL: \(homeTeamLogo)"
+                        }
+                        if let awayTeamLogo = detail.awayTeamLogo {
+                            detailsString += ", Away Team Logo URL: \(awayTeamLogo)"
+                        }
                         print(detailsString)
                     }
+
                     
-                    DispatchQueue.main.async {
-                        self?.view?.reloadData()
+                DispatchQueue.main.async {
+                    self?.view?.reloadData()
                     }
                 }
             }
@@ -54,7 +61,10 @@ class LeagueDetailPresenter{
             return leagueDetails.count
     }
         
-    func leagueDetail(at index: Int) -> LeagueDetails {
+    func leagueDetail(at index: Int) -> LeagueDetails? {
+            guard index >= 0 && index < leagueDetails.count else {
+                return nil
+            }
             return leagueDetails[index]
     }
 
