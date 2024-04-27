@@ -14,48 +14,63 @@ class LeagueDetailPresenter{
       self.view = view
      }
         
-    func fetchData(forSport sportName: String?, leagueKey: Int?) {
+    func fetchLastLeaguesData(forSport sportName: String?, leagueKey: Int?) {
         guard let sportName = sportName, let leagueKey = leagueKey else {
             return
         }
-            
-    APIService.shared.fetchLeaguesDetails(forSport: sportName, forLeagueDetail: leagueKey, from: "2024-04-23", to: "2024-04-26") { [weak self] (details, error) in
-                if let error = error {
-                    print("Error fetching league details: \(error.localizedDescription)")
-                } else if let details = details {
-                    self?.leagueDetails = details
-                    
-                    print("League Details:")
-                    for detail in details {
-                        var detailsString = "Event Details: "
-                        if let eventDay = detail.eventDay {
-                            detailsString += "Date: \(eventDay)"
-                        }
-                        if let eventTime = detail.eventTime {
-                            detailsString += ", Time: \(eventTime)"
-                        }
-                        if let eventHomeTeam = detail.eventHomeTeam {
-                            detailsString += ", Home Team: \(eventHomeTeam)"
-                        }
-                        if let eventAwayTeam = detail.eventAwayTeam {
-                            detailsString += ", Away Team: \(eventAwayTeam)"
-                        }
-                        if let homeTeamLogo = detail.homeTeamLogo {
-                            detailsString += ", Home Team Logo URL: \(homeTeamLogo)"
-                        }
-                        if let awayTeamLogo = detail.awayTeamLogo {
-                            detailsString += ", Away Team Logo URL: \(awayTeamLogo)"
-                        }
-                        print(detailsString)
-                    }
-
-                    
-                DispatchQueue.main.async {
+        
+        let calendar = Calendar.current
+        var dateComponents = DateComponents()
+        dateComponents.day = -14
+        let twoWeeksBeforeToday = calendar.date(byAdding: dateComponents, to: Date()) ?? Date()
+        let endDate = calendar.date(byAdding: .day, value: -1, to: Date()) ?? Date()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let fromDate = dateFormatter.string(from: twoWeeksBeforeToday)
+        let toDate = dateFormatter.string(from: endDate)
+        
+        APIService.shared.fetchLeaguesDetails(forSport: sportName, forLeagueDetail: leagueKey, from: fromDate, to: toDate) { [weak self] (details, error) in
+            if let error = error {
+                print("Error fetching league details: \(error.localizedDescription)")
+            } else if let details = details {
+                self?.leagueDetails = details
+                
+        DispatchQueue.main.async {
                     self?.view?.reloadData()
-                    }
                 }
             }
         }
+    }
+    
+    func fetchUpcomingLeagueData(forSport sportName: String?, leagueKey: Int?) {
+        guard let sportName = sportName, let leagueKey = leagueKey else {
+            return
+        }
+        let calendar = Calendar.current
+        var dateComponents = DateComponents()
+        dateComponents.day = 14
+        let twoWeeksAfterToday = calendar.date(byAdding: dateComponents, to: Date()) ?? Date()
+        let endDate = calendar.date(byAdding: .day, value: 14, to: Date()) ?? Date()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let fromDate = dateFormatter.string(from: twoWeeksAfterToday)
+        let toDate = dateFormatter.string(from: endDate)
+        
+        APIService.shared.fetchLeaguesDetails(forSport: sportName, forLeagueDetail: leagueKey, from: fromDate, to: toDate) { [weak self] (details, error) in
+            if let error = error {
+                print("Error fetching league details: \(error.localizedDescription)")
+            } else if let details = details {
+                self?.leagueDetails = details
+                
+        DispatchQueue.main.async {
+                    self?.view?.reloadData()
+                }
+            }
+        }
+    }
+
         
     func numberOfLeagueDetails() -> Int {
             return leagueDetails.count

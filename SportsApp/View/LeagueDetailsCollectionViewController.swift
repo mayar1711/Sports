@@ -9,57 +9,53 @@ import UIKit
 import Kingfisher
 
 private let reuseIdentifier = "LeaguesDetailsCell"
+private let headerReuseIdentifier = "SectionHeader"
 
-class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDetailView {
+class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDetailView ,UICollectionViewDelegateFlowLayout{
     
     var sportName:String?
     var leagueKey:Int?
     
     var leagueDetailPresenter: LeagueDetailPresenter!
-    var leagueDetails: [LeagueDetails] = [] 
+    var leagueDetails: [LeagueDetails] = []
+    
+    var leagueUpcomingPresenter: LeagueDetailPresenter!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let sportName = sportName {
-                print("Sport Name: \(sportName)")
-            } else {
-                print("Sport Name is nil")
-            }
-            
-            if let leagueKey = leagueKey {
-                print("League Key: \(leagueKey)")
-            } else {
-                print("League Key is nil")
-            }
-
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        
-        let cellNib = UINib(nibName: "LeagueDetailsCollectionViewCell", bundle: nil)
-                collectionView?.register(cellNib, forCellWithReuseIdentifier: "LeaguesDetailsCell")
-        
-        leagueDetailPresenter = LeagueDetailPresenter(view: self)
-        leagueDetailPresenter.fetchData(forSport: sportName, leagueKey: leagueKey)
-        
-
-        let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
-            switch sectionIndex {
-                case 0:
-                    return self.createTopSectionLayout()
-                case 1:
-                    return self.createSecondSectionLayout()
-                case 2:
-                    return self.createThirdSectionLayout()
-                default:
-                    return nil
-            }
-        }
-        layout.configuration.interSectionSpacing = 30
-        collectionView.collectionViewLayout = layout
                 
-        if let customFlowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
-            customFlowLayout.scrollDirection = .vertical
-            }
+                let cellNib = UINib(nibName: "LeagueDetailsCollectionViewCell", bundle: nil)
+                collectionView?.register(cellNib, forCellWithReuseIdentifier: "LeaguesDetailsCell")
+                
+                // Register header view
+                collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier)
+                
+                leagueDetailPresenter = LeagueDetailPresenter(view: self)
+                leagueDetailPresenter.fetchLastLeaguesData(forSport: sportName, leagueKey: leagueKey)
+                
+                leagueUpcomingPresenter = LeagueDetailPresenter(view: self)
+                leagueUpcomingPresenter.fetchUpcomingLeagueData(forSport: sportName, leagueKey: leagueKey)
+                
+                let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
+                    switch sectionIndex {
+                    case 0:
+                        return self.createTopSectionLayout()
+                    case 1:
+                        return self.createSecondSectionLayout()
+                    case 2:
+                        return self.createThirdSectionLayout()
+                    default:
+                        return nil
+                    }
+                }
+                layout.configuration.interSectionSpacing = 30
+                collectionView.collectionViewLayout = layout
+                
+                if let customFlowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+                    customFlowLayout.scrollDirection = .vertical
+                }
     }
     
     func reloadData() {
@@ -142,7 +138,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
         // #warning Incomplete implementation, return the number of items
         if section == 0 {
                 return 1
-        } 
+        }
         else if section == 1 {
             return leagueDetailPresenter.numberOfLeagueDetails()
         }
@@ -155,17 +151,36 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LeaguesDetailsCell", for: indexPath) as! LeagueDetailsCollectionViewCell
     
         if indexPath.section == 0 {
-            cell.team1Img.image = UIImage(named: "bee")
-            cell.team2Img.image = UIImage(named: "n")
-            cell.team1Name.text = "Team A"
-            cell.team2Name.text = "Team B"
+            let leagueDetail = leagueUpcomingPresenter.leagueDetail(at: indexPath.item)
+            cell.team1Name.text = leagueDetail?.eventHomeTeam ?? "not selected"
+            cell.team2Name.text = leagueDetail?.eventAwayTeam ?? "not selected"
+                
+            if let awayTeamLogoURL = URL(string: leagueDetail?.awayTeamLogo ?? "bee") {
+                cell.team2Img.kf.setImage(with: awayTeamLogoURL)
+            }
+            if let homeTeamLogoURL = URL(string: leagueDetail?.homeTeamLogo ?? "bee") {
+                cell.team1Img.kf.setImage(with: homeTeamLogoURL)
+            }
+            
+            if let homeTeamLogoURL = leagueDetail?.homeTeamLogo, let url = URL(string: homeTeamLogoURL) {
+                cell.team1Img.kf.setImage(with: url)
+            }
+                
+            if let awayTeamLogoURL = leagueDetail?.awayTeamLogo, let url = URL(string: awayTeamLogoURL) {
+                cell.team2Img.kf.setImage(with: url)
+            }
+                
             cell.vsText.text = "VS."
+            
         } else if indexPath.section == 1 {
             
             let leagueDetail = leagueDetailPresenter.leagueDetail(at: indexPath.item)
             cell.team1Name.text = leagueDetail?.eventHomeTeam ?? "not selected"
             cell.team2Name.text = leagueDetail?.eventAwayTeam ?? "not selected"
-            cell.vsText.text = "VS."
+            cell.dayText.text = leagueDetail?.eventDay ?? "not selected"
+            cell.timeText.text = leagueDetail?.eventTime ?? "not selected"
+            cell.vsText.text = leagueDetail?.eventHalftimeResult ?? ""
+            
             
             let imageSize = CGSize(width: 50, height: 50)
             if let awayTeamLogoURL = URL(string: leagueDetail?.awayTeamLogo ?? "bee") {
@@ -186,7 +201,41 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             cell.team1Img.image = UIImage(named: "bee")
             cell.team1Name.text = "Team c"
             cell.vsText.text = ""
+            cell.dayText.text =  ""
+            cell.timeText.text =  ""
         }
         return cell
     }
+    
+    // MARK: - UICollectionViewDelegateFlowLayout
+        
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+            return CGSize(width: collectionView.bounds.width, height: 50) // Adjust the height as needed
+        }
+        
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseIdentifier, for: indexPath)
+            
+            headerView.subviews.forEach { $0.removeFromSuperview() }
+            
+         
+            let titleLabel = UILabel()
+            titleLabel.text = "Section \(indexPath.section + 1) Header" 
+            titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
+            titleLabel.textColor = UIColor.black
+            titleLabel.translatesAutoresizingMaskIntoConstraints = false
+            headerView.addSubview(titleLabel)
+            
+            NSLayoutConstraint.activate([
+                titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+                titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
+            ])
+            
+            return headerView
+        } else {
+            fatalError("Unexpected supplementary view kind: \(kind)")
+        }
+    }
+
 }
