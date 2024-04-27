@@ -23,7 +23,11 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let heartImage = UIImage(systemName: "heart")
         
+        let favoriteButton = UIBarButtonItem(image: heartImage, style: .plain, target: self, action: #selector(favoriteButtonTapped))
+        navigationItem.rightBarButtonItem = favoriteButton
+
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
                 
                 let cellNib = UINib(nibName: "LeagueDetailsCollectionViewCell", bundle: nil)
@@ -57,7 +61,16 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                     customFlowLayout.scrollDirection = .vertical
                 }
     }
-    
+    @objc func favoriteButtonTapped() {
+        if let favoriteButton = navigationItem.rightBarButtonItem {
+            if favoriteButton.tintColor == .red {
+                favoriteButton.tintColor = nil
+            } else {
+                favoriteButton.tintColor = .red
+            }
+        }
+        
+    }
     func reloadData() {
         collectionView.reloadData()
         print("Data fetched.")
