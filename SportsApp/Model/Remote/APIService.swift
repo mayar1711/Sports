@@ -29,7 +29,8 @@ class APIService {
     
     
     func fetchLeaguesDetails(forSport sport: String,forLeagueDetail detail:Int, from dateFrom:String, to dateTo:String, completion: @escaping ([LeagueDetails]?, Error?) -> Void) {
-        let urlString = "\(baseURL)/\(sport.lowercased())/?met=Fixtures&APIkey=\(apiKey)&from=\(dateFrom)&to=\(dateTo)&leagueId=\(detail)"
+        let urlString = "https://apiv2.allsportsapi.com/football/?met=Fixtures&APIkey=130041c3994aa5c5e9a427b128c4e48be1235ae9e3b98bccb25f971282dfcff3&from=2021-04-18&to=2021-04-18&leagueId=207"
+        //"\(baseURL)/\(sport.lowercased())/?met=Fixtures&APIkey=\(apiKey)&from=\(dateFrom)&to=\(dateTo)&leagueId=\(detail)"
         
         
         AF.request(urlString).responseDecodable(of: LeagueDetailsResponse.self) { response in
@@ -41,4 +42,19 @@ class APIService {
             }      
         }
     }
+    
+    func fetchTeam(forSport sport: String ,forId id: Int , completion: @escaping ([Team]?, Error?) -> Void) {
+        let urlString = "\(baseURL)/\(sport.lowercased())/?met=Teams&leagueId=\(id)&APIkey=\(apiKey)"
+
+        AF.request(urlString).responseDecodable(of: TeamsResponse.self) { response in
+            switch response.result {
+            case .success(let TeamsResponse):
+                completion(TeamsResponse.result, nil)
+            case .failure(let error):
+                completion(nil, error)
+            }
+        }
+    }
+    
+    
 }

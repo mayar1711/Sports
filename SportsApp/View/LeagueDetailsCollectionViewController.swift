@@ -237,5 +237,17 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             fatalError("Unexpected supplementary view kind: \(kind)")
         }
     }
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let leagueDetail = leagueUpcomingPresenter.leagueDetail(at: indexPath.item)
+        let id = leagueDetail?.leagueKey
+        if indexPath.section == 2 {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let teamsVC = storyboard.instantiateViewController(withIdentifier: "TeamsTableViewController") as? TeamsTableViewController {
+                teamsVC.sportName = sportName
+                teamsVC.id = id
+                navigationController?.pushViewController(teamsVC, animated: true)
+            }
+        }
+    }
 
 }
