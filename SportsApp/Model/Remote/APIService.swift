@@ -26,9 +26,19 @@ class APIService {
             }
         }
     }
-}
-
-struct LeaguesResponse: Decodable {
-    let success: Int
-    let result: [League]
+    
+    
+    func fetchLeaguesDetails(forSport sport: String,forLeagueDetail detail:Int, from dateFrom:String, to dateTo:String, completion: @escaping ([LeagueDetails]?, Error?) -> Void) {
+        let urlString = "\(baseURL)/\(sport.lowercased())/?met=Fixtures&APIkey=\(apiKey)&from=\(dateFrom)&to=\(dateTo)&leagueId=\(detail)"
+        
+        
+        AF.request(urlString).responseDecodable(of: LeagueDetailsResponse.self) { response in
+                switch response.result {
+                case .success(let detailsResponse):
+                    completion(detailsResponse.result, nil)
+                case .failure(let error):
+                    completion(nil, error)
+            }      
+        }
+    }
 }

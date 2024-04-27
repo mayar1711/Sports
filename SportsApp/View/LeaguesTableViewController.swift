@@ -27,8 +27,6 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
-
-
     }
     
     
@@ -43,7 +41,6 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
 
     
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -68,6 +65,20 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
     }
 
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+            guard let leagueDetailsVC = storyboard.instantiateViewController(withIdentifier: "LeagueDetailsCollectionViewController") as? LeagueDetailsCollectionViewController else {
+                return
+            }
+            
+            let league = presenter.league(at: indexPath.row)
+            leagueDetailsVC.sportName = selectedSport
+            leagueDetailsVC.leagueKey = league.leagueKey
+            navigationController?.pushViewController(leagueDetailsVC, animated: true)
+        
     }
     
 
