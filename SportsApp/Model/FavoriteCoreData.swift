@@ -12,7 +12,9 @@ import UIKit
 class FavoriteCoreData{
     var favoriteLeagues: [[String: Any]] = []
     
-   
+   static let shared = FavoriteCoreData()
+    
+    private init() {}
     
     func saveToCoreData(_ dataArray: [[String: Any]]) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
@@ -20,10 +22,10 @@ class FavoriteCoreData{
         }
         let managedContext = appDelegate.persistentContainer.viewContext
         
-        for employeeData in dataArray {
-            guard let leagueName = employeeData["league_name"] as? String,
-                  let leagueLogo = employeeData["league_logo"] as? String,
-                  let leagueKey = employeeData["league_key"] as? Int
+        for leaguesData in dataArray {
+            guard let leagueName = leaguesData["league_name"] as? String,
+                  let leagueLogo = leaguesData["league_logo"] as? String,
+                  let leagueKey = leaguesData["league_key"] as? Int
                   //let salary = employeeData["employee_salary"] as? String
             else {
                 continue
@@ -33,9 +35,9 @@ class FavoriteCoreData{
             fetchRequest.predicate = NSPredicate(format: "leagueName == %@", leagueName)
             
             do {
-                let existingEmployees = try managedContext.fetch(fetchRequest)
+                let existingLeagues = try managedContext.fetch(fetchRequest)
                 
-                if existingEmployees.isEmpty {
+                if existingLeagues.isEmpty {
                     let fav = FavoriteLeagues(context: managedContext)
                     fav.leagueKey = NSDecimalNumber(value: leagueKey)
                     fav.leagueLogo = leagueLogo
