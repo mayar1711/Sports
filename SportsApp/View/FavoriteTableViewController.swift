@@ -21,9 +21,8 @@ class FavoriteTableViewController: UITableViewController {
             ["league_name": "Bundesliga", "league_logo": "bundesliga", "league_key": 3]
         ]
         
-        let coreDataHandler = FavoriteCoreData()
-        coreDataHandler.saveToCoreData(dummyDataArray)
-        
+        FavoriteCoreData.shared.saveToCoreData(dummyDataArray)
+
         fetchDataAndReloadTable()
     }
     
@@ -60,9 +59,21 @@ class FavoriteTableViewController: UITableViewController {
         return 114
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let league = favoriteLeagues[indexPath.row]
+            if let leagueName = league["league_name"] as? String {
+                FavoriteCoreData.shared.deleteFromCoreData(leagueName: leagueName)
+                fetchDataAndReloadTable()
+            }
+        }
+    }
+    
+
+    
     func fetchDataAndReloadTable() {
-        let coreDataHandler = FavoriteCoreData()
-        coreDataHandler.fetchDataFromCoreData()
-        favoriteLeagues = coreDataHandler.favoriteLeagues
+        FavoriteCoreData.shared.fetchDataFromCoreData()
+        favoriteLeagues = FavoriteCoreData.shared.favoriteLeagues
+        tableView.reloadData()
     }
 }

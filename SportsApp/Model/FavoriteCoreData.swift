@@ -77,4 +77,26 @@ class FavoriteCoreData{
             print("Error fetching data from Core Data: \(error.localizedDescription)")
         }
     }
+    func deleteFromCoreData(leagueName: String) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest: NSFetchRequest<FavoriteLeagues> = FavoriteLeagues.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "leagueName == %@", leagueName)
+        
+        do {
+            let existingLeagues = try managedContext.fetch(fetchRequest)
+            for league in existingLeagues {
+                managedContext.delete(league)
+            }
+            try managedContext.save()
+            print("League \(leagueName) deleted from Core Data.")
+        } catch {
+            print("Error deleting league from Core Data: \(error.localizedDescription)")
+        }
+    }
+
+    
 }
