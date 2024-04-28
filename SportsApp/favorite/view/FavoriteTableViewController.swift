@@ -42,13 +42,13 @@ class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol 
         
         return presenter.numberOfRows()
     }
-    
+        
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favoriteCell", for: indexPath)
 
         if let league = presenter.league(at: indexPath.row) {
             cell.textLabel?.text = league["league_name"] as? String ?? ""
-
+            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16.0)
             
             let imageSize = CGSize(width: 100, height: 100)
             cell.imageView?.frame.size = imageSize
@@ -64,6 +64,7 @@ class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol 
         }
         return cell
     }
+
 
 
     
