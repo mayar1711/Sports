@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol {
     
@@ -44,23 +45,55 @@ class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favoriteCell", for: indexPath)
-        
+
         if let league = presenter.league(at: indexPath.row) {
             cell.textLabel?.text = league["league_name"] as? String ?? ""
-            if let imageName = league["league_logo"] as? String {
-                cell.imageView?.image = UIImage(named: imageName)
+
+            
+            let imageSize = CGSize(width: 100, height: 100)
+            cell.imageView?.frame.size = imageSize
+
+            if let imageURLString = league["league_logo"] as? String, let imageURL = URL(string: imageURLString) {
+                cell.imageView?.kf.setImage(with: imageURL, placeholder: UIImage(named: "bee"), options: [
+                    .processor(DownsamplingImageProcessor(size: imageSize)),
+                    .cacheOriginalImage
+                ])
+            } else {
+                cell.imageView?.image = UIImage(named: "bee")
             }
         }
         return cell
     }
+
+
     
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Favorite Leagues"
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .white
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "Favorite Leagues"
+        titleLabel.font = UIFont(name: "Bodoni 72 Smallcaps", size: 40.0)
+        titleLabel.textColor = .black
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerView.addSubview(titleLabel)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
+        ])
+        
+        return headerView
     }
+
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+
     
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 114
+        return 100
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {

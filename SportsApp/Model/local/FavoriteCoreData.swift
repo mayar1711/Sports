@@ -70,7 +70,7 @@ class FavoriteCoreData{
                     "league_logo": favorite.leagueLogo ?? ""
                 ]
             }
-            //tableView.reloadData()
+            
         } catch {
             print("Error fetching data from Core Data: \(error.localizedDescription)")
         }
