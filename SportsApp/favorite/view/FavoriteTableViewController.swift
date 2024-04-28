@@ -7,17 +7,26 @@
 
 import UIKit
 
-class FavoriteTableViewController: UITableViewController {
+class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol {
+    
+    
+    func reloadData() {
+        tableView.reloadData()
+    }
+    
     
     var favoriteLeagues: [[String: Any]] = []
-    
+    var presenter: FavoritePresenterProtocol!
+
     override func viewWillAppear(_ animated: Bool) {
-        fetchDataAndReloadTable()
+        tableView.reloadData()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchDataAndReloadTable()
+        presenter = FavoritePresenter(model: FavoriteCoreData.shared)
+        presenter.viewDidLoad()
+        
     }
     
     
@@ -30,20 +39,18 @@ class FavoriteTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return  favoriteLeagues.count
+        return presenter.numberOfRows()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favoriteCell", for: indexPath)
         
-        let league = favoriteLeagues[indexPath.row]
+        if let league = presenter.league(at: indexPath.row) {
             cell.textLabel?.text = league["league_name"] as? String ?? ""
-
-            if let imageURLString = league["league_logo"] as? String, let imageURL = URL(string: imageURLString) {
-                cell.imageView?.kf.setImage(with: imageURL)
-            } else {
-                cell.imageView?.image = UIImage(named: "bee")
+            if let imageName = league["league_logo"] as? String {
+                cell.imageView?.image = UIImage(named: imageName)
             }
+        }
         return cell
     }
     
@@ -58,11 +65,8 @@ class FavoriteTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let league = favoriteLeagues[indexPath.row]
-            if let leagueName = league["league_name"] as? String {
-                FavoriteCoreData.shared.deleteFromCoreData(leagueName: leagueName)
-                fetchDataAndReloadTable()
-            }
+            presenter.deleteLeague(at: indexPath.row)
+            tableView.reloadData()
         }
     }
     
