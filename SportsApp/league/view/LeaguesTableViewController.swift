@@ -49,23 +49,41 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
         return presenter.numberOfLeagues()
     }
 
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       
         let cell = tableView.dequeueReusableCell(withIdentifier: "leaguesCell", for: indexPath)
         let league = presenter.league(at: indexPath.row)
         cell.textLabel?.text = league.leagueName
-        let imageSize = CGSize(width: 50, height: 50)
+        
+        let imageSize = CGSize(width: 60, height: 60)
+        cell.imageView?.frame = CGRect(origin: .zero, size: imageSize)
+        
         if let imageURL = URL(string: league.leagueLogo ?? "") {
-            cell.imageView?.kf.setImage(with: imageURL)
-            cell.imageView?.frame.size = imageSize
-            cell.imageView?.layer.cornerRadius = imageSize.width / 2
-            cell.imageView?.clipsToBounds = true
-
-    }
-
+            let processor = DownsamplingImageProcessor(size: imageSize)
+            cell.imageView?.kf.indicatorType = .activity
+            cell.imageView?.kf.setImage(
+                with: imageURL,
+                options: [
+                    .processor(processor),
+                    .scaleFactor(UIScreen.main.scale),
+                    .transition(.fade(1)),
+                    .cacheOriginalImage
+                ],
+                completionHandler: { result in
+                    switch result {
+                    case .success(let value):
+                        cell.imageView?.layer.cornerRadius = 25
+                        cell.imageView?.layer.masksToBounds = true
+                        cell.imageView?.image = value.image
+                    case .failure(let error):
+                        print("Error loading image: \(error)")
+                    }
+                }
+            )
+        }
+        
         return cell
     }
+
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -82,4 +100,10 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
         
             navigationController?.pushViewController(leagueDetailsVC, animated: true)
     }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
+
+
 }
