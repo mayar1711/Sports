@@ -36,9 +36,25 @@ class APIService {
                 switch response.result {
                 case .success(let detailsResponse):
                     completion(detailsResponse.result, nil)
+                    print("sucess==========")
                 case .failure(let error):
                     completion(nil, error)
             }      
         }
     }
+    
+    func fetchTeam(forSport sport: String ,forId id: Int , completion: @escaping ([Team]?, Error?) -> Void) {
+        let urlString = "\(baseURL)/\(sport.lowercased())/?met=Teams&leagueId=\(id)&APIkey=\(apiKey)"
+
+        AF.request(urlString).responseDecodable(of: TeamsResponse.self) { response in
+            switch response.result {
+            case .success(let TeamsResponse):
+                completion(TeamsResponse.result, nil)
+            case .failure(let error):
+                completion(nil, error)
+            }
+        }
+    }
+    
+    
 }

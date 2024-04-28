@@ -7,23 +7,26 @@
 
 import UIKit
 
-class FavoriteTableViewController: UITableViewController {
+class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol {
+    
+    
+    func reloadData() {
+        tableView.reloadData()
+    }
+    
     
     var favoriteLeagues: [[String: Any]] = []
+    var presenter: FavoritePresenterProtocol!
+
+    override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter = FavoritePresenter(model: FavoriteCoreData.shared)
+        presenter.viewDidLoad()
         
-        let dummyDataArray: [[String: Any]] = [
-            
-            ["league_name": "Premier League", "league_logo": "n", "league_key": 1],
-            ["league_name": "La Liga", "league_logo": "bee", "league_key": 2],
-            ["league_name": "Bundesliga", "league_logo": "bundesliga", "league_key": 3]
-        ]
-        
-        FavoriteCoreData.shared.saveToCoreData(dummyDataArray)
-
-        fetchDataAndReloadTable()
     }
     
     
@@ -36,22 +39,23 @@ class FavoriteTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return  favoriteLeagues.count
+        return presenter.numberOfRows()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favoriteCell", for: indexPath)
         
-        let league = favoriteLeagues[indexPath.row]
-        cell.textLabel?.text = league["league_name"] as? String ?? ""
-        if let imageName = league["league_logo"] as? String {
-            cell.imageView?.image = UIImage(named: imageName)
+        if let league = presenter.league(at: indexPath.row) {
+            cell.textLabel?.text = league["league_name"] as? String ?? ""
+            if let imageName = league["league_logo"] as? String {
+                cell.imageView?.image = UIImage(named: imageName)
+            }
         }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "test table"
+        return "Favorite Leagues"
     }
     
     
@@ -61,11 +65,8 @@ class FavoriteTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let league = favoriteLeagues[indexPath.row]
-            if let leagueName = league["league_name"] as? String {
-                FavoriteCoreData.shared.deleteFromCoreData(leagueName: leagueName)
-                fetchDataAndReloadTable()
-            }
+            presenter.deleteLeague(at: indexPath.row)
+            tableView.reloadData()
         }
     }
     
@@ -75,5 +76,12 @@ class FavoriteTableViewController: UITableViewController {
         FavoriteCoreData.shared.fetchDataFromCoreData()
         favoriteLeagues = FavoriteCoreData.shared.favoriteLeagues
         tableView.reloadData()
+        
+        print("Leagues saved in Core Data:")
+        for league in favoriteLeagues {
+            if let leagueName = league["league_name"] as? String {
+                print("- \(leagueName)")
+            }
+        }
     }
 }

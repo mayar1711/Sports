@@ -26,7 +26,6 @@ class FavoriteCoreData{
             guard let leagueName = leaguesData["league_name"] as? String,
                   let leagueLogo = leaguesData["league_logo"] as? String,
                   let leagueKey = leaguesData["league_key"] as? Int
-                  //let salary = employeeData["employee_salary"] as? String
             else {
                 continue
             }
@@ -42,7 +41,6 @@ class FavoriteCoreData{
                     fav.leagueKey = NSDecimalNumber(value: leagueKey)
                     fav.leagueLogo = leagueLogo
                     fav.leagueName = leagueName
-                   // fav.sportName =
                     
                     try managedContext.save()
                     print("League \(leagueName) saved to Core Data.")
@@ -77,6 +75,7 @@ class FavoriteCoreData{
             print("Error fetching data from Core Data: \(error.localizedDescription)")
         }
     }
+    
     func deleteFromCoreData(leagueName: String) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return

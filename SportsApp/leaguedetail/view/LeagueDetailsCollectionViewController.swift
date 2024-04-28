@@ -14,7 +14,10 @@ private let headerReuseIdentifier = "SectionHeader"
 class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDetailView ,UICollectionViewDelegateFlowLayout{
     
     var sportName:String?
+    
     var leagueKey:Int?
+    var leagueName:String?
+    var leagueImage:String?
     
     var leagueDetailPresenter: LeagueDetailPresenter!
     var leagueDetails: [LeagueDetails] = []
@@ -23,7 +26,11 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let heartImage = UIImage(systemName: "heart")
         
+        let favoriteButton = UIBarButtonItem(image: heartImage, style: .plain, target: self, action: #selector(favoriteButtonTapped))
+        navigationItem.rightBarButtonItem = favoriteButton
+
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
                 
                 let cellNib = UINib(nibName: "LeagueDetailsCollectionViewCell", bundle: nil)
@@ -57,6 +64,55 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                     customFlowLayout.scrollDirection = .vertical
                 }
     }
+    
+    @objc func favoriteButtonTapped() {
+        if let favoriteButton = navigationItem.rightBarButtonItem {
+           if favoriteButton.tintColor == .red {
+               favoriteButton.tintColor = nil
+           } else {
+               favoriteButton.tintColor = .red
+               print("before if.")
+                    
+
+             if let leagueKey = leagueKey {
+                        if let leagueName = leagueName {
+                            if let leagueLogo = leagueImage {
+                                print("inside if.")
+                                print("leagueKey = \(leagueKey)")
+                                print("leagueLogo = \(leagueLogo)")
+                                print("leagueName = \(leagueName)")
+                                print("sportName = \(sportName ?? "hhh")")
+                                print("Inside if.")
+                                let leagueData: [String: Any] = [
+                                    "league_name": leagueName,
+                                    "league_logo": leagueLogo,
+                                    "league_key": leagueKey,
+                                    "sportName" : sportName!
+                                ]
+                                
+                                FavoriteCoreData.shared.saveToCoreData([leagueData])
+                                print("Data is inserted.")
+                            } else {
+                                print("League logo is nil.")
+                            }
+                        } else {
+                            print("League name is nil.")
+                        }
+                    } else {
+                        print("League key is nil.")
+                    }
+
+                  FavoriteCoreData.shared.fetchDataFromCoreData()
+                print("Leagues in Core Data after adding:")
+            for league in FavoriteCoreData.shared.favoriteLeagues {
+                if let leagueName = league["league_name"] as? String {
+                print("- \(leagueName)")
+                }
+            }
+                    reloadData()
+        }
+    }
+}
     
     func reloadData() {
         collectionView.reloadData()
@@ -237,5 +293,17 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             fatalError("Unexpected supplementary view kind: \(kind)")
         }
     }
-
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let leagueDetail = leagueUpcomingPresenter.leagueDetail(at: indexPath.item)
+        let id = leagueDetail?.leagueKey
+        if indexPath.section == 2 {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let teamsVC = storyboard.instantiateViewController(withIdentifier: "TeamDetailsViewController") as? TeamDetailsViewController {
+                teamsVC.sportName = sportName
+                teamsVC.sportid = id
+                navigationController?.pushViewController(teamsVC, animated: true)
+            }
+        }
+    }
 }

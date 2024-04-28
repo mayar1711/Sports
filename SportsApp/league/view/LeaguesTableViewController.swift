@@ -77,10 +77,9 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
             let league = presenter.league(at: indexPath.row)
             leagueDetailsVC.sportName = selectedSport
             leagueDetailsVC.leagueKey = league.leagueKey
-            navigationController?.pushViewController(leagueDetailsVC, animated: true)
+            leagueDetailsVC.leagueName = league.leagueName
+            leagueDetailsVC.leagueImage = league.leagueLogo
         
+            navigationController?.pushViewController(leagueDetailsVC, animated: true)
     }
-    
-
-
 }
