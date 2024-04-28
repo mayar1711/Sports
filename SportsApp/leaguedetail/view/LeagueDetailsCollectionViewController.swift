@@ -81,11 +81,13 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                                 print("leagueKey = \(leagueKey)")
                                 print("leagueLogo = \(leagueLogo)")
                                 print("leagueName = \(leagueName)")
+                                print("sportName = \(sportName ?? "hhh")")
                                 print("Inside if.")
                                 let leagueData: [String: Any] = [
                                     "league_name": leagueName,
                                     "league_logo": leagueLogo,
-                                    "league_key": leagueKey
+                                    "league_key": leagueKey,
+                                    "sportName" : sportName!
                                 ]
                                 
                                 FavoriteCoreData.shared.saveToCoreData([leagueData])
