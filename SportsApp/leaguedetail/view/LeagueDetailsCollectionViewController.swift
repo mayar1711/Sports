@@ -21,8 +21,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     
     var leagueDetailPresenter: LeagueDetailPresenter!
     var leagueDetails: [LeagueDetails] = []
-    
-    var leagueUpcomingPresenter: LeagueDetailPresenter!
+    private var team: [Team] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,9 +40,8 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                 
                 leagueDetailPresenter = LeagueDetailPresenter(view: self)
                 leagueDetailPresenter.fetchLastLeaguesData(forSport: sportName, leagueKey: leagueKey)
-                
-                leagueUpcomingPresenter = LeagueDetailPresenter(view: self)
-                leagueUpcomingPresenter.fetchUpcomingLeagueData(forSport: sportName, leagueKey: leagueKey)
+                leagueDetailPresenter.fetchUpcomingLeagueData(forSport: sportName, leagueKey: leagueKey)
+                leagueDetailPresenter.fetchData(forSport: sportName, forId: leagueKey)
                 
                 let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
                     switch sectionIndex {
@@ -199,7 +197,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             return leagueDetailPresenter.numberOfLeagueDetails()
         }
         else {
-                return 5
+            return leagueDetailPresenter.numberOfTeams()
         }
     }
 
@@ -207,10 +205,9 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LeaguesDetailsCell", for: indexPath) as! LeagueDetailsCollectionViewCell
     
         if indexPath.section == 0 {
-            let leagueDetail = leagueUpcomingPresenter.leagueDetail(at: indexPath.item)
+            let leagueDetail = leagueDetailPresenter.leagueDetail(at: indexPath.item)
             cell.team1Name.text = leagueDetail?.eventHomeTeam ?? "not selected"
             cell.team2Name.text = leagueDetail?.eventAwayTeam ?? "not selected"
-                
             if let awayTeamLogoURL = URL(string: leagueDetail?.awayTeamLogo ?? "bee") {
                 cell.team2Img.kf.setImage(with: awayTeamLogoURL)
             }
@@ -254,8 +251,12 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                 cell.team2Img.kf.setImage(with: url)
             }
         } else {
-            cell.team1Img.image = UIImage(named: "bee")
-            cell.team1Name.text = "Team c"
+            let leagueDetail = leagueDetailPresenter.team(at: indexPath.item)
+            let imageSize = CGSize(width: 80, height: 50)
+            if let awayTeamLogoURL = URL(string: leagueDetail.team_logo ?? "bee") {
+              cell.team1Img.kf.setImage(with: awayTeamLogoURL)
+            }
+            cell.team1Name.text = ""
             cell.vsText.text = ""
             cell.dayText.text =  ""
             cell.timeText.text =  ""
@@ -295,12 +296,14 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let leagueDetail = leagueUpcomingPresenter.leagueDetail(at: indexPath.item)
-        let id = leagueDetail?.leagueKey
+        let leagueDetail = leagueDetailPresenter.team(at: indexPath.item)
+        let id = leagueDetail.team_key
         if indexPath.section == 2 {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let teamsVC = storyboard.instantiateViewController(withIdentifier: "TeamDetailsViewController") as? TeamDetailsViewController {
                 teamsVC.sportName = sportName
+                teamsVC.team = leagueDetail.players
+                teamsVC.coch = leagueDetail.coaches
                 teamsVC.sportid = id
                 navigationController?.pushViewController(teamsVC, animated: true)
             }

@@ -7,7 +7,14 @@
 
 import Foundation
 
-class TeamDetailsPresenter{
+
+protocol TeamDetailsProvider: AnyObject {
+    func fetchData(forSport sportName: String?, forId id: Int?)
+    func numberOfTeams() -> Int
+    func team(at index: Int) -> Team
+}
+
+class TeamDetailsPresenter: TeamDetailsProvider {
     
     private var view: TeamDetailsView?
     private var team: [Team] = []
@@ -45,7 +52,7 @@ class TeamDetailsPresenter{
         return team.count
     }
 
-    func Team(at index: Int) -> Team {
+    func team(at index: Int) -> Team {
         return team[index]
     }
 

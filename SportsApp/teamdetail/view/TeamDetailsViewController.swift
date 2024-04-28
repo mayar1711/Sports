@@ -11,21 +11,22 @@ class TeamDetailsViewController: UIViewController , UITableViewDelegate, UITable
     
     var sportName:String?
     var sportid:Int?
-   
+    
+    var team: [Player]?
+    var coch: [Coach]?
+    
     @IBOutlet weak var teamImage: UIImageView!
     @IBOutlet weak var teamName: UILabel!
     @IBOutlet weak var teamMembersTable: UITableView!
     
-  
-    
-    override func viewDidLoad() {
+   override func viewDidLoad() {
         super.viewDidLoad()
         
         teamMembersTable.delegate = self
         teamMembersTable.dataSource = self
-
-
-        // Do any additional setup after loading the view.
+        
+       print(team?.count)
+       print(coch?.count)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

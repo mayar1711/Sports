@@ -9,6 +9,7 @@ import Foundation
 class LeagueDetailPresenter{
     private weak var view: LeagueDetailView?
     private var leagueDetails: [LeagueDetails] = []
+    private var team: [Team] = []
         
     init(view: LeagueDetailView) {
       self.view = view
@@ -82,6 +83,36 @@ class LeagueDetailPresenter{
             }
             return leagueDetails[index]
     }
+    
+    func fetchData(forSport sportName: String? , forId id: Int?) {
+      
+        guard let sportName = sportName else {
+            return
+        }
+                
+        APIService.shared.fetchTeam(forSport: sportName, forId: id ?? 207)
+            { [weak self] (team, error) in
+                guard let self = self else { return }
+                if let error = error {
+                    DispatchQueue.main.async {
+                        self.view?.showError(message: error.localizedDescription)
+                    }
+                } else if let team = team {
+                    self.team = team
+                    DispatchQueue.main.async {
+                        self.view?.reloadData()
+                        print(team[1].team_name)
+                    }
+                }
+            }
+        }
+    func numberOfTeams() -> Int {
+        print(team.count)
+        return team.count
+    }
 
+    func team(at index: Int) -> Team {
+        return team[index]
+    }
 }
 
