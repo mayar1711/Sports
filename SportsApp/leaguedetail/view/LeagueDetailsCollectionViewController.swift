@@ -305,6 +305,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                 teamsVC.team = leagueDetail.players
                 teamsVC.coch = leagueDetail.coaches
                 teamsVC.sportid = id
+                teamsVC.logo = leagueDetail.team_logo
                 navigationController?.pushViewController(teamsVC, animated: true)
             }
         }

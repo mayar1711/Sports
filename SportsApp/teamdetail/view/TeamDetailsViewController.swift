@@ -14,7 +14,7 @@ class TeamDetailsViewController: UIViewController , UITableViewDelegate, UITable
     
     var team: [Player]?
     var coch: [Coach]?
-    
+    var logo: String?
     @IBOutlet weak var teamImage: UIImageView!
     @IBOutlet weak var teamName: UILabel!
     @IBOutlet weak var teamMembersTable: UITableView!
