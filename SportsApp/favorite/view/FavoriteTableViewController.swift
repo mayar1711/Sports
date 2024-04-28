@@ -84,4 +84,18 @@ class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol 
             }
         }
     }
+    
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        if let leagueDetailsVC = storyboard?.instantiateViewController(withIdentifier: "LeagueDetailsCollectionViewController") as? LeagueDetailsCollectionViewController {
+            if let league = presenter.league(at: indexPath.row) {
+                leagueDetailsVC.sportName = league["sportName"] as? String
+                leagueDetailsVC.leagueKey = league["leagueKey"] as? Int
+                navigationController?.pushViewController(leagueDetailsVC, animated: true)
+            }
+        }
+    }
+
 }
