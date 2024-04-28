@@ -77,7 +77,8 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
              if let leagueKey = leagueKey {
                         if let leagueName = leagueName {
                             if let leagueLogo = leagueImage {
-                                print("Before if.")
+                                print("inside if.")
+                                print("leagueKey = \(leagueKey)")
                                 print("leagueLogo = \(leagueLogo)")
                                 print("leagueName = \(leagueName)")
                                 print("Inside if.")
@@ -86,6 +87,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                                     "league_logo": leagueLogo,
                                     "league_key": leagueKey
                                 ]
+                                
                                 FavoriteCoreData.shared.saveToCoreData([leagueData])
                                 print("Data is inserted.")
                             } else {
@@ -104,25 +106,11 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                 if let leagueName = league["league_name"] as? String {
                 print("- \(leagueName)")
                 }
-        }
-                                    
-                    reloadData()
-                }
             }
+                    reloadData()
         }
-    
-    
-//    let dummyDataArray: [[String: Any]] = [
-//        
-//        ["league_name": "Premier League", "league_logo": "n", "league_key": 5],
-//        ["league_name": "La Liga", "league_logo": "bee", "league_key": 100],
-//  
-//    ]
-//    
-//    FavoriteCoreData.shared.saveToCoreData(dummyDataArray)
-//
-//    fetchDataAndReloadTable()
-
+    }
+}
     
     func reloadData() {
         collectionView.reloadData()

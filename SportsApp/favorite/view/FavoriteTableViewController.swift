@@ -11,18 +11,12 @@ class FavoriteTableViewController: UITableViewController {
     
     var favoriteLeagues: [[String: Any]] = []
     
+    override func viewWillAppear(_ animated: Bool) {
+        fetchDataAndReloadTable()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let dummyDataArray: [[String: Any]] = [
-            
-            ["league_name": "Premier League", "league_logo": "n", "league_key": 5],
-            ["league_name": "La Liga", "league_logo": "bee", "league_key": 100],
-      
-        ]
-        
-        FavoriteCoreData.shared.saveToCoreData(dummyDataArray)
-
         fetchDataAndReloadTable()
     }
     
@@ -43,15 +37,18 @@ class FavoriteTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favoriteCell", for: indexPath)
         
         let league = favoriteLeagues[indexPath.row]
-        cell.textLabel?.text = league["league_name"] as? String ?? ""
-        if let imageName = league["league_logo"] as? String {
-            cell.imageView?.image = UIImage(named: imageName)
-        }
+            cell.textLabel?.text = league["league_name"] as? String ?? ""
+
+            if let imageURLString = league["league_logo"] as? String, let imageURL = URL(string: imageURLString) {
+                cell.imageView?.kf.setImage(with: imageURL)
+            } else {
+                cell.imageView?.image = UIImage(named: "bee")
+            }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "test table"
+        return "Favorite Leagues"
     }
     
     
