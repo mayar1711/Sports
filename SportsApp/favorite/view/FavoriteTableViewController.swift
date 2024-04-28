@@ -16,9 +16,9 @@ class FavoriteTableViewController: UITableViewController {
         
         let dummyDataArray: [[String: Any]] = [
             
-            ["league_name": "Premier League", "league_logo": "n", "league_key": 1],
-            ["league_name": "La Liga", "league_logo": "bee", "league_key": 2],
-            ["league_name": "Bundesliga", "league_logo": "bundesliga", "league_key": 3]
+            ["league_name": "Premier League", "league_logo": "n", "league_key": 5],
+            ["league_name": "La Liga", "league_logo": "bee", "league_key": 100],
+      
         ]
         
         FavoriteCoreData.shared.saveToCoreData(dummyDataArray)
@@ -75,5 +75,12 @@ class FavoriteTableViewController: UITableViewController {
         FavoriteCoreData.shared.fetchDataFromCoreData()
         favoriteLeagues = FavoriteCoreData.shared.favoriteLeagues
         tableView.reloadData()
+        
+        print("Leagues saved in Core Data:")
+        for league in favoriteLeagues {
+            if let leagueName = league["league_name"] as? String {
+                print("- \(leagueName)")
+            }
+        }
     }
 }
