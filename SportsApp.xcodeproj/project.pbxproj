@@ -130,20 +130,12 @@
 				D45229E52BDDAA9C0084AE06 /* leaguedetail */,
 				D45229E42BDDAA910084AE06 /* league */,
 				D42CEC352BDA615200DB64AC /* Model */,
-				D42CEC332BDA613500DB64AC /* View */,
 				7DAF35B32BD7F765007E18C1 /* ViewController.swift */,
 				7DAF35BB2BD7F767007E18C1 /* Assets.xcassets */,
 				7DAF35C02BD7F767007E18C1 /* Info.plist */,
 				7DAF35B82BD7F765007E18C1 /* SportsApp.xcdatamodeld */,
 			);
 			path = SportsApp;
-			sourceTree = "<group>";
-		};
-		D42CEC332BDA613500DB64AC /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		D42CEC352BDA615200DB64AC /* Model */ = {
@@ -187,7 +179,6 @@
 		D45229E62BDDAAA70084AE06 /* favorite */ = {
 			isa = PBXGroup;
 			children = (
-				D45229EB2BDDAB360084AE06 /* presenter */,
 				D45229EA2BDDAB300084AE06 /* view */,
 			);
 			path = favorite;
@@ -226,13 +217,6 @@
 				7D848A912BD858BF006BF588 /* FavoriteTableViewController.swift */,
 			);
 			path = view;
-			sourceTree = "<group>";
-		};
-		D45229EB2BDDAB360084AE06 /* presenter */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = presenter;
 			sourceTree = "<group>";
 		};
 		D45229EC2BDDAB440084AE06 /* view */ = {
