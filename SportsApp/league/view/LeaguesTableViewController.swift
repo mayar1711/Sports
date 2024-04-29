@@ -90,7 +90,17 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
     func showError(message: String) {
         print("Error: \(message)")
         activityIndicator.stopAnimating()
+
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+                self.navigationController?.popViewController(animated: true)
+            }
+            alert.addAction(okAction)
+            self.present(alert, animated: true, completion: nil)
+        }
     }
+
 
     
     override func viewDidDisappear(_ animated: Bool) {
