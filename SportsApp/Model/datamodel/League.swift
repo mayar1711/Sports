@@ -8,10 +8,10 @@
 import Foundation
 
 class League: Decodable {
-    let leagueKey: Int
-    let leagueName: String
-    let countryKey: Int
-    let countryName: String
+    let leagueKey: Int?
+    let leagueName: String?
+    let countryKey: Int?
+    let countryName: String?
     let leagueLogo: String?
     let countryLogo: String?
     
@@ -27,8 +27,9 @@ class League: Decodable {
 }
 
 struct LeaguesResponse: Decodable {
-    let success: Int
-    let result: [League]
+    let success: Int?
+    let result: [League]?
+    
 }
 
 

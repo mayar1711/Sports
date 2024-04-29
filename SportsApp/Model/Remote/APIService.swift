@@ -47,9 +47,7 @@ class APIService {
     }
     
     func fetchTeam(forSport sport: String ,forId id: Int , completion: @escaping ([Team]?, Error?) -> Void) {
-        let urlString = "https://apiv2.allsportsapi.com/football/?&met=Teams&leagueId=175&APIkey=07359650162e2d887b1d358298de6c7e803decc0621d16d2a95afac4b98628a4"
-        
-        //"\(baseURL)/\(sport.lowercased())/?met=Teams&leagueId=\(id)&APIkey=\(apiKey)"
+        let urlString = "\(baseURL)/\(sport.lowercased())/?met=Teams&leagueId=\(id)&APIkey=\(apiKey)"
 
         AF.request(urlString).responseDecodable(of: TeamsResponse.self) { response in
             switch response.result {

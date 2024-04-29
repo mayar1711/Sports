@@ -9,6 +9,7 @@ import Foundation
 
 protocol LeagueView : AnyObject
 {
+    
     func reloadData()
     func showError(message: String)
 
