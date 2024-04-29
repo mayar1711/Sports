@@ -302,7 +302,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let teamsVC = storyboard.instantiateViewController(withIdentifier: "TeamDetailsViewController") as? TeamDetailsViewController {
                 teamsVC.sportName = sportName
-                teamsVC.team = leagueDetail.players
+                teamsVC.player = leagueDetail.players
                 teamsVC.coch = leagueDetail.coaches
                 teamsVC.sportid = id
                 teamsVC.logo = leagueDetail.team_logo
