@@ -220,7 +220,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LeaguesDetailsCell", for: indexPath) as! LeagueDetailsCollectionViewCell
     
        if indexPath.section == 0 {
-           let leagueDetail = lastLeagueDetails?[indexPath.item]
+           let leagueDetail = leagueDetails?[indexPath.item]
             cell.team1Name.text = leagueDetail?.eventHomeTeam ?? "not selected"
             cell.team2Name.text = leagueDetail?.eventAwayTeam ?? "not selected"
             if let awayTeamLogoURL = URL(string: leagueDetail?.awayTeamLogo ?? "bee") {
@@ -242,7 +242,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             
         } else if indexPath.section == 1 {
             
-            let leagueDetail = leagueDetails? [indexPath.item]
+            let leagueDetail = lastLeagueDetails? [indexPath.item]
             cell.team1Name.text = leagueDetail?.eventHomeTeam ?? "not selected"
             cell.team2Name.text = leagueDetail?.eventAwayTeam ?? "not selected"
             cell.dayText.text = leagueDetail?.eventDay ?? "not selected"
