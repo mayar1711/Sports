@@ -32,7 +32,7 @@ class LeagueDetailPresenter {
         let fromDate = dateFormatter.string(from: twoWeeksBeforeToday)
         let toDate = dateFormatter.string(from: endDate)
         
-        APIService.shared.fetchLeaguesDetails(forSport: sportName, forLeagueDetail: leagueKey, from: fromDate, to: toDate) { [weak self] (details, error) in
+        APIService.shared.fetchLeaguesDetails(forSport: sportName, forLeagueDetail: 270, from: "2024-01-01", to: "2024-03-01") { [weak self] (details, error) in
             if let error = error {
                 print("Error fetching league details: \(error.localizedDescription)")
             } else if let details = details {

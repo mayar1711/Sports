@@ -247,7 +247,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             cell.team2Name.text = leagueDetail?.eventAwayTeam ?? "not selected"
             cell.dayText.text = leagueDetail?.eventDay ?? "not selected"
             cell.timeText.text = leagueDetail?.eventTime ?? "not selected"
-            cell.vsText.text = leagueDetail?.eventHalftimeResult ?? ""
+            cell.vsText.text = leagueDetail?.finalResult ?? ""
             
             
             let imageSize = CGSize(width: 50, height: 50)
@@ -315,12 +315,11 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
        let id = leagueDetail?.team_key
         if indexPath.section == 2 {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if let teamsVC = storyboard.instantiateViewController(withIdentifier: "TeamDetailsViewController") as? TeamDetailsViewController {
+            if let teamsVC = storyboard.instantiateViewController(withIdentifier: "TeamsTableViewController") as? TeamsTableViewController {
                 teamsVC.sportName = sportName
                 teamsVC.player = leagueDetail?.players
                 teamsVC.coch = leagueDetail?.coaches
-                teamsVC.sportid = id
-                teamsVC.logo = leagueDetail?.team_logo
+                teamsVC.id = id
                 teamsVC.hidesBottomBarWhenPushed = true
                 navigationController?.pushViewController(teamsVC, animated: true)
             }

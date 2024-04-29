@@ -8,10 +8,13 @@
 import UIKit
 
 class TeamsTableViewController: UITableViewController , TeamDetailsView {
-     
-    var Presenter:TeamDetailsPresenter!
-    var sportName :String?
-    var id : Int?
+    
+    var presenter: TeamDetailsPresenter!
+        var sportName: String?
+        var id: Int?
+        var teams: [Team]?
+        var player: [Player]?
+        var coch: [Coach]?
     
     func reloadData() {
         print("done")
@@ -24,75 +27,87 @@ class TeamsTableViewController: UITableViewController , TeamDetailsView {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        Presenter = TeamDetailsPresenter(view: self)
-        Presenter.fetchData(forSport: sportName, forId: id)
+        presenter = TeamDetailsPresenter(view: self)
+        presenter.fetchData(forSport: sportName, forId: id)
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        if section == 0 {
+            return 1
+        } else {
+            return player?.count ?? 0
+        }
     }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TeamCell", for: indexPath)
 
         // Configure the cell...
-
+        if indexPath.section == 0 {
+            if let coach = coch?[indexPath.row] {
+                cell.textLabel?.text = coach.coach_name
+                cell.imageView?.image = nil
+                
+            }
+        } else {
+            if let player = player?[indexPath.row] {
+                cell.textLabel?.text = player.player_name
+                cell.detailTextLabel?.text = player.player_type
+                if let imageURLString = player.player_image, let imageURL = URL(string: imageURLString) {
+                    cell.imageView?.kf.setImage(with: imageURL, placeholder: UIImage(named: "defaultPlayerImage"))
+                } else {
+                    cell.imageView?.image = UIImage(named: "defaultPlayerImage")
+                }
+            }
+        }
         return cell
     }
-    */
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+  
+    
+
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .white
+        
+        let titleLabel = UILabel()
+        titleLabel.font = UIFont(name: "Bodoni 72 Smallcaps", size: 25.0)
+        titleLabel.textColor = .black
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerView.addSubview(titleLabel)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
+        ])
+        
+        switch section {
+        case 0:
+            titleLabel.text = "Coche"
+        case 1:
+            titleLabel.text = "Players"
+        default:
+            titleLabel.text = "Section \(section)"
+        }
+        
+        return headerView
     }
-    */
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 80
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 75
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
