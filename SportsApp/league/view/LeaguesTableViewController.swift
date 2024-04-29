@@ -8,15 +8,16 @@
 import UIKit
 import Alamofire
 import Kingfisher
-
+import Reachability
 
 class LeaguesTableViewController: UITableViewController , LeagueView{
     
     var leages: League?
     var presenter: LeaguePresenter!
-
+    var activityIndicator = UIActivityIndicatorView(style: .large)
     var selectedSport :String?
-    
+    let reachability = try! Reachability()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,16 +28,65 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
+        
+        setupActivityIndicator()
+        activityIndicator.startAnimating()
+        startMonitoringReachability()
+
+    }
+    func startMonitoringReachability() {
+        reachability.whenReachable = { _ in
+            self.presenter.fetchData(forSport: self.selectedSport)
+        }
+        reachability.whenUnreachable = { _ in
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "No Internet Connection", message: "Please check your network settings and try again.", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+                    self.navigationController?.popViewController(animated: true)
+                }
+                alert.addAction(okAction)
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+        do {
+            try reachability.startNotifier()
+        } catch {
+            print("Unable to start reachability notifier")
+        }
     }
     
-    
+    func stopMonitoringReachability() {
+        reachability.stopNotifier()
+    }
+
+    func setupActivityIndicator() {
+        activityIndicator.color = .gray
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(activityIndicator)
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        activityIndicator.startAnimating()
+    }
+
     func reloadData() {
         tableView.reloadData()
         print("done")
+        activityIndicator.stopAnimating()
+
     }
     
     func showError(message: String) {
         print("Error: \(message)")
+        activityIndicator.stopAnimating()
+
     }
 
     
@@ -106,5 +156,8 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
         return 100
     }
 
+    deinit {
+        stopMonitoringReachability()
+    }
 
 }

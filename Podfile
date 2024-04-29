@@ -9,5 +9,6 @@ target 'SportsApp' do
   pod 'Alamofire'
   pod 'Kingfisher'
   pod 'SDWebImage'
+  pod 'ReachabilitySwift'
 
 end
