@@ -30,10 +30,10 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
         tableView.estimatedRowHeight = 100
         
         setupActivityIndicator()
-        activityIndicator.startAnimating()
         startMonitoringReachability()
-
+        activityIndicator.startAnimating()
     }
+    
     func startMonitoringReachability() {
         reachability.whenReachable = { _ in
             self.presenter.fetchData(forSport: self.selectedSport)
@@ -73,23 +73,32 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        activityIndicator.startAnimating()
+     //   activityIndicator.startAnimating()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        activityIndicator.stopAnimating()
     }
 
     func reloadData() {
         tableView.reloadData()
         print("done")
         activityIndicator.stopAnimating()
-
     }
     
     func showError(message: String) {
         print("Error: \(message)")
         activityIndicator.stopAnimating()
-
     }
 
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        activityIndicator.stopAnimating()
+    }
+
+
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -138,18 +147,18 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-            guard let leagueDetailsVC = storyboard.instantiateViewController(withIdentifier: "LeagueDetailsCollectionViewController") as? LeagueDetailsCollectionViewController else {
-                return
-            }
-            
-            let league = presenter.league(at: indexPath.row)
-            leagueDetailsVC.sportName = selectedSport
-            leagueDetailsVC.leagueKey = league.leagueKey
-            leagueDetailsVC.leagueName = league.leagueName
-            leagueDetailsVC.leagueImage = league.leagueLogo
-            leagueDetailsVC.hidesBottomBarWhenPushed = true
+        guard let leagueDetailsVC = storyboard.instantiateViewController(withIdentifier: "LeagueDetailsCollectionViewController") as? LeagueDetailsCollectionViewController else {
+            return
+        }
         
-            navigationController?.pushViewController(leagueDetailsVC, animated: true)
+        let league = presenter.league(at: indexPath.row)
+        leagueDetailsVC.sportName = selectedSport
+        leagueDetailsVC.leagueKey = league.leagueKey
+        leagueDetailsVC.leagueName = league.leagueName
+        leagueDetailsVC.leagueImage = league.leagueLogo
+        leagueDetailsVC.hidesBottomBarWhenPushed = true
+        
+        navigationController?.pushViewController(leagueDetailsVC, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -159,5 +168,4 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
     deinit {
         stopMonitoringReachability()
     }
-
 }
