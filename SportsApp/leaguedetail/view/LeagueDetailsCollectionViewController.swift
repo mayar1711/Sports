@@ -8,6 +8,7 @@
 import UIKit
 import Kingfisher
 
+
 private let reuseIdentifier = "LeaguesDetailsCell"
 private let headerReuseIdentifier = "SectionHeader"
 
@@ -306,6 +307,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                 teamsVC.coch = leagueDetail.coaches
                 teamsVC.sportid = id
                 teamsVC.logo = leagueDetail.team_logo
+                teamsVC.hidesBottomBarWhenPushed = true
                 navigationController?.pushViewController(teamsVC, animated: true)
             }
         }

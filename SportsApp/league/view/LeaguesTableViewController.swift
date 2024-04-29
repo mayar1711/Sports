@@ -97,6 +97,7 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
             leagueDetailsVC.leagueKey = league.leagueKey
             leagueDetailsVC.leagueName = league.leagueName
             leagueDetailsVC.leagueImage = league.leagueLogo
+            leagueDetailsVC.hidesBottomBarWhenPushed = true
         
             navigationController?.pushViewController(leagueDetailsVC, animated: true)
     }

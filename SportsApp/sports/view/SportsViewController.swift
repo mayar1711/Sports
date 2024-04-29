@@ -53,6 +53,7 @@ class SportsViewController: UIViewController , UICollectionViewDataSource , UICo
         let selectedSportName = sportsNames[indexPath.item]
         let leaguesViewController = LeaguesTableViewController()
         leaguesViewController.selectedSport = selectedSportName
+        leaguesViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(leaguesViewController, animated: true)
     }
 

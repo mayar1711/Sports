@@ -7,6 +7,8 @@
 
 import UIKit
 import Kingfisher
+import SDWebImage
+
 
 class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol {
     
@@ -42,7 +44,29 @@ class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol 
         
         return presenter.numberOfRows()
     }
-        
+            
+//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "favoriteCell", for: indexPath)
+//
+//            if let league = presenter.league(at: indexPath.row) {
+//                cell.textLabel?.text = league["league_name"] as? String ?? ""
+//                cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16.0)
+//                
+//                let imageSize = CGSize(width: 100, height: 100)
+//                cell.imageView?.frame.size = imageSize
+//
+//                if let imageURLString = league["league_logo"] as? String, let imageURL = URL(string: imageURLString) {
+//                    cell.imageView?.kf.setImage(with: imageURL, placeholder: UIImage(named: "bee"), options: [
+//                        .processor(DownsamplingImageProcessor(size: imageSize)),
+//                        .cacheOriginalImage
+//                    ])
+//                } else {
+//                    cell.imageView?.image = UIImage(named: "bee")
+//                }
+//            }
+//            return cell
+//        }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favoriteCell", for: indexPath)
 
@@ -51,15 +75,30 @@ class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol 
             cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16.0)
             
             let imageSize = CGSize(width: 100, height: 100)
-            cell.imageView?.frame.size = imageSize
 
             if let imageURLString = league["league_logo"] as? String, let imageURL = URL(string: imageURLString) {
-                cell.imageView?.kf.setImage(with: imageURL, placeholder: UIImage(named: "bee"), options: [
-                    .processor(DownsamplingImageProcessor(size: imageSize)),
-                    .cacheOriginalImage
-                ])
+                
+                cell.imageView?.sd_setImage(with: imageURL, placeholderImage: UIImage(named: "bee")) { (image, error, cacheType, url) in
+
+                    if let error = error {
+                        print("Error loading image: \(error)")
+                    }
+                    
+                    if cacheType == .none {
+                        print("Image was downloaded from the network")
+                    } else {
+                        print("Image was retrieved from cache")
+                    }
+                    
+                    
+                    if let image = image {
+                        cell.imageView?.frame.size = imageSize
+                        cell.imageView?.image = image
+                    }
+                }
             } else {
                 cell.imageView?.image = UIImage(named: "bee")
+                cell.imageView?.frame.size = imageSize
             }
         }
         return cell
@@ -67,7 +106,7 @@ class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol 
 
 
 
-    
+
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
         headerView.backgroundColor = .white
