@@ -9,7 +9,9 @@ import Foundation
 
 protocol LeagueDetailView : AnyObject
 {
-    func reloadData()
+    func reloadTeamData(list : [Team])
+    func reloadUpcomingLeagueData(list : [LeagueDetails])
+    func reloadLastLeaguesData(list : [LeagueDetails])
     func showError(message: String)
 
 }

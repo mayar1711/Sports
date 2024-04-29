@@ -6,15 +6,16 @@
 //
 
 import Foundation
-class LeagueDetailPresenter{
+class LeagueDetailPresenter {
     private weak var view: LeagueDetailView?
     private var leagueDetails: [LeagueDetails] = []
     private var team: [Team] = []
-        
+    private var lastLeagueDetails: [LeagueDetails] = []
+
     init(view: LeagueDetailView) {
-      self.view = view
-     }
-        
+        self.view = view
+    }
+    
     func fetchLastLeaguesData(forSport sportName: String?, leagueKey: Int?) {
         guard let sportName = sportName, let leagueKey = leagueKey else {
             return
@@ -35,10 +36,10 @@ class LeagueDetailPresenter{
             if let error = error {
                 print("Error fetching league details: \(error.localizedDescription)")
             } else if let details = details {
-                self?.leagueDetails = details
-                
-        DispatchQueue.main.async {
-                    self?.view?.reloadData()
+                self?.lastLeagueDetails = details
+                print(details.count)
+                DispatchQueue.main.async {
+                    self?.view?.reloadLastLeaguesData(list: details)
                 }
             }
         }
@@ -64,55 +65,32 @@ class LeagueDetailPresenter{
                 print("Error fetching league details: \(error.localizedDescription)")
             } else if let details = details {
                 self?.leagueDetails = details
-                
-        DispatchQueue.main.async {
-                    self?.view?.reloadData()
+                print(details.count)
+                DispatchQueue.main.async {
+                    self?.view?.reloadUpcomingLeagueData(list: details)
                 }
             }
         }
     }
-
-        
-    func numberOfLeagueDetails() -> Int {
-            return leagueDetails.count
-    }
-        
-    func leagueDetail(at index: Int) -> LeagueDetails? {
-            guard index >= 0 && index < leagueDetails.count else {
-                return nil
-            }
-            return leagueDetails[index]
-    }
     
-    func fetchData(forSport sportName: String? , forId id: Int?) {
-      
+    func fetchData(forSport sportName: String?, forId id: Int?) {
         guard let sportName = sportName else {
             return
         }
-                
-        APIService.shared.fetchTeam(forSport: sportName, forId: id ?? 207)
-            { [weak self] (team, error) in
-                guard let self = self else { return }
-                if let error = error {
-                    DispatchQueue.main.async {
-                        self.view?.showError(message: error.localizedDescription)
-                    }
-                } else if let team = team {
-                    self.team = team
-                    DispatchQueue.main.async {
-                        self.view?.reloadData()
-                        print(team[1].team_name)
-                    }
+        
+        APIService.shared.fetchTeam(forSport: sportName, forId: id ?? 207) { [weak self] (team, error) in
+            guard let self = self else { return }
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.view?.showError(message: error.localizedDescription)
+                }
+            } else if let team = team {
+                self.team = team
+                print(team.count)
+                DispatchQueue.main.async {
+                    self.view?.reloadTeamData(list: team)
                 }
             }
         }
-    func numberOfTeams() -> Int {
-        print(team.count)
-        return team.count
-    }
-
-    func team(at index: Int) -> Team {
-        return team[index]
     }
 }
-

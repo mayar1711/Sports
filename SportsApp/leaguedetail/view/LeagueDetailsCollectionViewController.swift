@@ -13,7 +13,8 @@ private let reuseIdentifier = "LeaguesDetailsCell"
 private let headerReuseIdentifier = "SectionHeader"
 
 class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDetailView ,UICollectionViewDelegateFlowLayout{
-    
+
+
     var sportName:String?
     
     var leagueKey:Int?
@@ -21,9 +22,10 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     var leagueImage:String?
     
     var leagueDetailPresenter: LeagueDetailPresenter!
-    var leagueDetails: [LeagueDetails] = []
-    private var team: [Team] = []
-    
+    var leagueDetails: [LeagueDetails]?
+    private var team: [Team]?
+    var lastLeagueDetails: [LeagueDetails]?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         let heartImage = UIImage(systemName: "heart")
@@ -108,16 +110,28 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                 print("- \(leagueName)")
                 }
             }
-                    reloadData()
+                    
         }
     }
 }
     
-    func reloadData() {
+    func reloadTeamData(list: [Team]) {
+        self.team = list
         collectionView.reloadData()
-        print("Data fetched.")
     }
-        
+
+    func reloadUpcomingLeagueData(list: [LeagueDetails]) {
+        self.leagueDetails = list
+        print(leagueDetails?.count)
+        collectionView.reloadData()
+    }
+
+    func reloadLastLeaguesData(list: [LeagueDetails]  ) {
+        self.lastLeagueDetails = list
+        print(lastLeagueDetails?.count)
+        collectionView.reloadData()
+    }
+    
     func showError(message: String) {
         print("Error: \(message)")
     }
@@ -195,18 +209,18 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                 return 1
         }
         else if section == 1 {
-            return leagueDetailPresenter.numberOfLeagueDetails()
+            return leagueDetails?.count ?? 1
         }
         else {
-            return leagueDetailPresenter.numberOfTeams()
+            return team?.count ?? 1
         }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LeaguesDetailsCell", for: indexPath) as! LeagueDetailsCollectionViewCell
     
-        if indexPath.section == 0 {
-            let leagueDetail = leagueDetailPresenter.leagueDetail(at: indexPath.item)
+       if indexPath.section == 0 {
+           let leagueDetail = lastLeagueDetails?[indexPath.item]
             cell.team1Name.text = leagueDetail?.eventHomeTeam ?? "not selected"
             cell.team2Name.text = leagueDetail?.eventAwayTeam ?? "not selected"
             if let awayTeamLogoURL = URL(string: leagueDetail?.awayTeamLogo ?? "bee") {
@@ -228,7 +242,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             
         } else if indexPath.section == 1 {
             
-            let leagueDetail = leagueDetailPresenter.leagueDetail(at: indexPath.item)
+            let leagueDetail = leagueDetails? [indexPath.item]
             cell.team1Name.text = leagueDetail?.eventHomeTeam ?? "not selected"
             cell.team2Name.text = leagueDetail?.eventAwayTeam ?? "not selected"
             cell.dayText.text = leagueDetail?.eventDay ?? "not selected"
@@ -252,9 +266,9 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                 cell.team2Img.kf.setImage(with: url)
             }
         } else {
-            let leagueDetail = leagueDetailPresenter.team(at: indexPath.item)
+            let leagueDetail = team?[indexPath.item]
             let imageSize = CGSize(width: 80, height: 50)
-            if let awayTeamLogoURL = URL(string: leagueDetail.team_logo ?? "bee") {
+            if let awayTeamLogoURL = URL(string: leagueDetail?.team_logo ?? "bee") {
               cell.team1Img.kf.setImage(with: awayTeamLogoURL)
             }
             cell.team1Name.text = ""
@@ -296,17 +310,17 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
         }
     }
     
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let leagueDetail = leagueDetailPresenter.team(at: indexPath.item)
-        let id = leagueDetail.team_key
+   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+       let leagueDetail = team?[indexPath.item]
+       let id = leagueDetail?.team_key
         if indexPath.section == 2 {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let teamsVC = storyboard.instantiateViewController(withIdentifier: "TeamDetailsViewController") as? TeamDetailsViewController {
                 teamsVC.sportName = sportName
-                teamsVC.player = leagueDetail.players
-                teamsVC.coch = leagueDetail.coaches
+                teamsVC.player = leagueDetail?.players
+                teamsVC.coch = leagueDetail?.coaches
                 teamsVC.sportid = id
-                teamsVC.logo = leagueDetail.team_logo
+                teamsVC.logo = leagueDetail?.team_logo
                 teamsVC.hidesBottomBarWhenPushed = true
                 navigationController?.pushViewController(teamsVC, animated: true)
             }
