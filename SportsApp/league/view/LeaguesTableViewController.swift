@@ -12,7 +12,7 @@ import Reachability
 
 class LeaguesTableViewController: UITableViewController , LeagueView{
     
-    var leages: League?
+    var leages: [League]?
     var presenter: LeaguePresenter!
     var activityIndicator = UIActivityIndicatorView(style: .large)
     var selectedSport :String?
@@ -81,8 +81,9 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
         activityIndicator.stopAnimating()
     }
 
-    func reloadData() {
+    func reloadData(list : [League]) {
         tableView.reloadData()
+        self.leages=list
         print("done")
         activityIndicator.stopAnimating()
     }
@@ -115,18 +116,18 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter.numberOfLeagues()
+        return leages?.count ?? 1
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "leaguesCell", for: indexPath)
-        let league = presenter.league(at: indexPath.row)
-        cell.textLabel?.text = league.leagueName
+        let league = leages?[indexPath.item]
+        cell.textLabel?.text = league?.leagueName
         
         let imageSize = CGSize(width: 60, height: 60)
         cell.imageView?.frame = CGRect(origin: .zero, size: imageSize)
         
-        if let imageURL = URL(string: league.leagueLogo ?? "") {
+        if let imageURL = URL(string: league?.leagueLogo ?? "") {
             let processor = DownsamplingImageProcessor(size: imageSize)
             cell.imageView?.kf.indicatorType = .activity
             cell.imageView?.kf.setImage(
@@ -161,11 +162,11 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
             return
         }
         
-        let league = presenter.league(at: indexPath.row)
+        let league = leages?[indexPath.item]
         leagueDetailsVC.sportName = selectedSport
-        leagueDetailsVC.leagueKey = league.leagueKey
-        leagueDetailsVC.leagueName = league.leagueName
-        leagueDetailsVC.leagueImage = league.leagueLogo
+        leagueDetailsVC.leagueKey = league?.leagueKey
+        leagueDetailsVC.leagueName = league?.leagueName
+        leagueDetailsVC.leagueImage = league?.leagueLogo
         leagueDetailsVC.hidesBottomBarWhenPushed = true
         
         navigationController?.pushViewController(leagueDetailsVC, animated: true)

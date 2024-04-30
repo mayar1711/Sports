@@ -19,7 +19,6 @@ class LeaguePresenter{
         guard let sportName = sportName else {
             return
         }
-        
         APIService.shared.fetchLeagues(forSport: sportName) { [weak self] (leagues, error) in
             guard let self = self else { return }
             if let error = error {
@@ -29,20 +28,9 @@ class LeaguePresenter{
             } else if let leagues = leagues {
                 self.leagues = leagues
                 DispatchQueue.main.async {
-                    self.view?.reloadData()
+                    self.view?.reloadData(list: leagues)
                 }
             }
         }
     }
-
-    func numberOfLeagues() -> Int {
-        print(leagues.count)
-        return leagues.count
-    }
-
-    func league(at index: Int) -> League {
-        return leagues[index]
-    }
-
-
 }
