@@ -45,4 +45,26 @@ final class APIServiceTest: XCTestCase {
         }
      }
     
+    func testFetchLeaguesDetail() {
+        let expectation = self.expectation(description: "Fetching LeaguesDetail")
+
+        APIService.shared.fetchLeaguesDetails(forSport: "football", forLeagueDetail: 270, from: "2024-01-01", to: "2024-12-31") { leagueDetails, error in
+            if let leagueDetails = leagueDetails {
+                XCTAssertNotNil(leagueDetails, "League details should not be nil")
+                expectation.fulfill()
+            } else {
+                XCTFail("Failed to fetch league details")
+            }
+        }
+
+        waitForExpectations(timeout: 20) { error in
+            if let error = error {
+                XCTFail("Error: \(error.localizedDescription)")
+            }
+        }
+    }
+
+
+    
+    
 }
