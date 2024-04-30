@@ -116,7 +116,23 @@ extension MockNetworkServices{
         }
     }
     
-    
-    
+    func fetchTeam(forSport sport: String, forId id: Int, completion: @escaping ([Team]?, Error?) -> Void) {
+        if sport == "invalid_sport" {
+            completion(nil, NSError(domain: "MockNetworkServicesError", code: -1, userInfo: nil))
+            return
+        }
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: teamFakeJsonObj) else {
+            completion(nil, NSError(domain: "MockNetworkServicesError", code: -1, userInfo: nil))
+            return
+        }
+        
+        do {
+            let result = try JSONDecoder().decode(TeamsResponse.self, from: jsonData)
+            completion(result.result, nil)
+        } catch {
+            completion(nil, error)
+        }
+    }
+
     
 }
