@@ -178,10 +178,10 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     }
     
     func createThirdSectionLayout() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.7))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(0.2))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4), heightDimension: .fractionalHeight(0.2))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
             
             let section = NSCollectionLayoutSection(group: group)
@@ -194,6 +194,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             return section
     }
     
+    
 
     // MARK: UICollectionViewDataSource
 
@@ -201,7 +202,8 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
         // #warning Incomplete implementation, return the number of sections
         return 3
     }
-
+    
+    
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
