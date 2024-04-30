@@ -29,7 +29,8 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     override func viewDidLoad() {
         super.viewDidLoad()
         let heartImage = UIImage(systemName: "heart")
-        
+        print("sportName********** \(sportName)")
+        print("sportName********** \(leagueKey)")
         let favoriteButton = UIBarButtonItem(image: heartImage, style: .plain, target: self, action: #selector(favoriteButtonTapped))
         navigationItem.rightBarButtonItem = favoriteButton
 
