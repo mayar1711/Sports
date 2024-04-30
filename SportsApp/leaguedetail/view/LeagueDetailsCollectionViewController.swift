@@ -29,19 +29,20 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     override func viewDidLoad() {
         super.viewDidLoad()
         let heartImage = UIImage(systemName: "heart")
-        print("sportName********** \(sportName)")
-        print("sportName********** \(leagueKey)")
         let favoriteButton = UIBarButtonItem(image: heartImage, style: .plain, target: self, action: #selector(favoriteButtonTapped))
         navigationItem.rightBarButtonItem = favoriteButton
 
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
                 
-                let cellNib = UINib(nibName: "LeagueDetailsCollectionViewCell", bundle: nil)
-                collectionView?.register(cellNib, forCellWithReuseIdentifier: "LeaguesDetailsCell")
+        let cellNib = UINib(nibName: "LeagueDetailsCollectionViewCell", bundle: nil)
+        collectionView?.register(cellNib, forCellWithReuseIdentifier: "LeaguesDetailsCell")
                 
-                // Register header view
-                collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier)
-                
+        // Register header
+        collectionView?.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
+        
+    
+                        
+        
                 leagueDetailPresenter = LeagueDetailPresenter(view: self)
                 leagueDetailPresenter.fetchLastLeaguesData(forSport: sportName, leagueKey: leagueKey)
                 leagueDetailPresenter.fetchUpcomingLeagueData(forSport: sportName, leagueKey: leagueKey)
@@ -171,6 +172,11 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
               section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12
               , bottom: 50, trailing: 0)
               section.orthogonalScrollingBehavior = .continuous
+        
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .absolute(50))
+        let headerSupplementary = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                                
+        section.boundarySupplementaryItems = [headerSupplementary]
               
              return section
     }
@@ -188,6 +194,11 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 10
+        
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4), heightDimension: .absolute(30))
+        let headerSupplementary = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                                
+        section.boundarySupplementaryItems = [headerSupplementary]
 
         return section
     }
@@ -205,6 +216,12 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             
             // for horizontal scrolling
             section.orthogonalScrollingBehavior = .continuous
+        
+        
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(40))
+        let headerSupplementary = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                                
+        section.boundarySupplementaryItems = [headerSupplementary]
             
             return section
     }
@@ -226,7 +243,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                 return 1
         }
         else if section == 1 {
-            return leagueDetails?.count ?? 1
+            return lastLeagueDetails?.count ?? 0
         }
         else {
             return team?.count ?? 1
@@ -299,34 +316,9 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     // MARK: - UICollectionViewDelegateFlowLayout
         
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-            return CGSize(width: collectionView.bounds.width, height: 50) // Adjust the height as needed
+            return CGSize(width: collectionView.bounds.width, height: 50)
         }
-        
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == UICollectionView.elementKindSectionHeader {
-            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseIdentifier, for: indexPath)
             
-            headerView.subviews.forEach { $0.removeFromSuperview() }
-            
-         
-            let titleLabel = UILabel()
-            titleLabel.text = "Section \(indexPath.section + 1) Header" 
-            titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
-            titleLabel.textColor = UIColor.black
-            titleLabel.translatesAutoresizingMaskIntoConstraints = false
-            headerView.addSubview(titleLabel)
-            
-            NSLayoutConstraint.activate([
-                titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
-                titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
-            ])
-            
-            return headerView
-        } else {
-            fatalError("Unexpected supplementary view kind: \(kind)")
-        }
-    }
-    
    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
        let leagueDetail = team?[indexPath.item]
        let id = leagueDetail?.team_key
@@ -342,4 +334,28 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             }
         }
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+           guard kind == UICollectionView.elementKindSectionHeader else {
+               return UICollectionReusableView()
+           }
+           
+           let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderView", for: indexPath) as! SectionHeader
+        
+           switch indexPath.section {
+           case 0:
+                   headerView.titleLabel.text = "Upcoming Matches"
+           case 1:
+                   headerView.titleLabel.text = "Latest Matches"
+           case 2:
+                   headerView.titleLabel.text = "Teams"
+           default:
+               headerView.titleLabel.text = ""
+           }
+        
+         headerView.titleLabel.font = UIFont(name: "Bodoni 72 Smallcaps", size: 25)
+           
+           return headerView
+       }
+    
 }
