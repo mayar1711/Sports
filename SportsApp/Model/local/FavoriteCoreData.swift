@@ -27,7 +27,8 @@ class FavoriteCoreData{
             for leaguesData in dataArray {
                 guard let leagueName = leaguesData["league_name"] as? String,
                       let leagueLogo = leaguesData["league_logo"] as? String,
-                      let leagueKey = leaguesData["league_key"] as? Int
+                      let leagueKey = leaguesData["league_key"] as? Int,
+                      let sportName = leaguesData["sportName"] as? String
                 else {
                     continue
                 }
@@ -43,6 +44,7 @@ class FavoriteCoreData{
                         fav.leagueKey = NSDecimalNumber(value: leagueKey)
                         fav.leagueLogo = leagueLogo
                         fav.leagueName = leagueName
+                        fav.sportName = sportName
                         
                         try managedContext.save()
                         print("League \(leagueName) saved to Core Data.")
@@ -72,7 +74,8 @@ class FavoriteCoreData{
                 [
                     "league_name": favorite.leagueName ?? "",
                     "league_key": favorite.leagueKey as? Int ?? 0,
-                    "league_logo": favorite.leagueLogo ?? ""
+                    "league_logo": favorite.leagueLogo ?? "" ,
+                    "sportName" : favorite.sportName ?? ""
                 ]
             }
             
