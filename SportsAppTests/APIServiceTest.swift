@@ -26,5 +26,23 @@ final class APIServiceTest: XCTestCase {
         }
         waitForExpectations(timeout: 10)
     }
+
+    func testFetchTeam() {
+        let expectation = self.expectation(description: "Fetching team")
+        
+        APIService.shared.fetchTeam(forSport: "football", forId: 123) { team, error in
+            if let team = team {
+                
+                XCTAssertNotNil(team, "Team should not be nil")
+                expectation.fulfill()
+
+            }
+            else {
+                XCTFail()
+            }
+        }
+        waitForExpectations(timeout: 10) { error in
+        }
+     }
     
 }
