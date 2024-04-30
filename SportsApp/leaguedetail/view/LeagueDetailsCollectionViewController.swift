@@ -7,7 +7,7 @@
 
 import UIKit
 import Kingfisher
-
+import Reachability
 
 private let reuseIdentifier = "LeaguesDetailsCell"
 private let headerReuseIdentifier = "SectionHeader"
@@ -16,7 +16,6 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
 
 
     var sportName:String?
-    
     var leagueKey:Int?
     var leagueName:String?
     var leagueImage:String?
@@ -25,9 +24,32 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     var leagueDetails: [LeagueDetails]?
     private var team: [Team]?
     var lastLeagueDetails: [LeagueDetails]?
+    
+    let reachability = try! Reachability()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        try? reachability.startNotifier()
+        
+        reachability.whenReachable = { reachability in
+                    if reachability.connection == .wifi || reachability.connection == .cellular {
+                        print("Network is reachable")
+                        self.fetchData()
+                    }
+                }
+                
+                reachability.whenUnreachable = { _ in
+                    print("Network is not reachable")
+                    let alert = UIAlertController(title: "No Internet Connection", message: "Please check your internet connection and try again.", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+                        // Dismiss the view controller and go back to the previous screen
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                    alert.addAction(okAction)
+                    self.present(alert, animated: true, completion: nil)
+                }
+                fetchData()
+        
         let heartImage = UIImage(systemName: "heart")
         let favoriteButton = UIBarButtonItem(image: heartImage, style: .plain, target: self, action: #selector(favoriteButtonTapped))
         navigationItem.rightBarButtonItem = favoriteButton
@@ -43,10 +65,10 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     
                         
         
-                leagueDetailPresenter = LeagueDetailPresenter(view: self)
-                leagueDetailPresenter.fetchLastLeaguesData(forSport: sportName, leagueKey: leagueKey)
-                leagueDetailPresenter.fetchUpcomingLeagueData(forSport: sportName, leagueKey: leagueKey)
-                leagueDetailPresenter.fetchData(forSport: sportName, forId: leagueKey)
+//                leagueDetailPresenter = LeagueDetailPresenter(view: self)
+//                leagueDetailPresenter.fetchLastLeaguesData(forSport: sportName, leagueKey: leagueKey)
+//                leagueDetailPresenter.fetchUpcomingLeagueData(forSport: sportName, leagueKey: leagueKey)
+//                leagueDetailPresenter.fetchData(forSport: sportName, forId: leagueKey)
                 
                 let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
                     switch sectionIndex {
@@ -67,6 +89,16 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                     customFlowLayout.scrollDirection = .vertical
                 }
     }
+    
+    func fetchData() {
+            // Fetch data when network is available
+            leagueDetailPresenter = LeagueDetailPresenter(view: self)
+            leagueDetailPresenter.fetchLastLeaguesData(forSport: sportName, leagueKey: leagueKey)
+            leagueDetailPresenter.fetchUpcomingLeagueData(forSport: sportName, leagueKey: leagueKey)
+            leagueDetailPresenter.fetchData(forSport: sportName, forId: leagueKey)
+            
+            // Other data fetching code...
+        }
     
     @objc func favoriteButtonTapped() {
             if let favoriteButton = navigationItem.rightBarButtonItem {
