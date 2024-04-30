@@ -139,10 +139,25 @@ class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             presenter.deleteLeague(at: indexPath.row)
+            showLeagueRemovedSuccess()
             tableView.reloadData()
-        }
+            }
     }
     
+    
+    func showLeagueRemovedSuccess() {
+        let alert = UIAlertController(title: "Removed from Favorites", message: "", preferredStyle: .alert)
+        
+        let titleFont = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18), NSAttributedString.Key.foregroundColor: UIColor.red]
+        let titleAttrString = NSMutableAttributedString(string: "Removed from Favorites", attributes: titleFont)
+        alert.setValue(titleAttrString, forKey: "attributedTitle")
+        
+        present(alert, animated: true, completion: nil)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            alert.dismiss(animated: true, completion: nil)
+        }
+    }
 
     
     func fetchDataAndReloadTable() {

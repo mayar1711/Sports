@@ -134,15 +134,17 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     func showFavoriteLeagueSavedSuccess() {
         let alert = UIAlertController(title: "Added to Favorites", message: "", preferredStyle: .alert)
                 
-                let titleFont = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18), NSAttributedString.Key.foregroundColor: UIColor.systemGreen]
-                let titleAttrString = NSMutableAttributedString(string: "Added to Favorites", attributes: titleFont)
-                alert.setValue(titleAttrString, forKey: "attributedTitle")
-                
-                let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                alert.addAction(okAction)
-                
-                present(alert, animated: true, completion: nil)
+        let titleFont = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18), NSAttributedString.Key.foregroundColor: UIColor.systemGreen]
+        let titleAttrString = NSMutableAttributedString(string: "Added to Favorites", attributes: titleFont)
+        alert.setValue(titleAttrString, forKey: "attributedTitle")
+        
+        present(alert, animated: true, completion: nil)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            alert.dismiss(animated: true, completion: nil)
         }
+    }
+
     
     func showError(message: String) {
         print("Error: \(message)")
