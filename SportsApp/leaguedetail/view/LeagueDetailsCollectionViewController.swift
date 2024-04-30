@@ -67,53 +67,52 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     }
     
     @objc func favoriteButtonTapped() {
-        if let favoriteButton = navigationItem.rightBarButtonItem {
-           if favoriteButton.tintColor == .red {
-               favoriteButton.tintColor = nil
-           } else {
-               favoriteButton.tintColor = .red
-               print("before if.")
-                    
+            if let favoriteButton = navigationItem.rightBarButtonItem {
+               if favoriteButton.tintColor == .red {
+                   favoriteButton.tintColor = nil
+               } else {
+                   favoriteButton.tintColor = .red
+                   print("before if.")
+               
 
-             if let leagueKey = leagueKey {
-                        if let leagueName = leagueName {
-                            if let leagueLogo = leagueImage {
-                                print("inside if.")
-                                print("leagueKey = \(leagueKey)")
-                                print("leagueLogo = \(leagueLogo)")
-                                print("leagueName = \(leagueName)")
-                                print("sportName = \(sportName ?? "hhh")")
-                                print("Inside if.")
-                                let leagueData: [String: Any] = [
-                                    "league_name": leagueName,
-                                    "league_logo": leagueLogo,
-                                    "league_key": leagueKey,
-                                    "sportName" : sportName!
-                                ]
-                                
-                                FavoriteCoreData.shared.saveToCoreData([leagueData])
-                                print("Data is inserted.")
+                 if let leagueKey = leagueKey {
+                            if let leagueName = leagueName {
+                                if let leagueLogo = leagueImage {
+                                    print("inside if.")
+                                    print("leagueKey = \(leagueKey)")
+                                    print("leagueLogo = \(leagueLogo)")
+                                    print("leagueName = \(leagueName)")
+                                    print("sportName = \(sportName ?? "hhh")")
+                                    print("Inside if.")
+                                    let leagueData: [String: Any] = [
+                                        "league_name": leagueName,
+                                        "league_logo": leagueLogo,
+                                        "league_key": leagueKey,
+                                        "sportName" : sportName!
+                                    ]
+                                    leagueDetailPresenter.saveFavoriteLeague(leagueData: leagueData)
+                                     print("Data is inserted.")
+                                } else {
+                                    print("League logo is nil.")
+                                }
                             } else {
-                                print("League logo is nil.")
+                                print("League name is nil.")
                             }
                         } else {
-                            print("League name is nil.")
+                            print("League key is nil.")
                         }
-                    } else {
-                        print("League key is nil.")
-                    }
 
-                  FavoriteCoreData.shared.fetchDataFromCoreData()
-                print("Leagues in Core Data after adding:")
-            for league in FavoriteCoreData.shared.favoriteLeagues {
-                if let leagueName = league["league_name"] as? String {
-                print("- \(leagueName)")
+                      FavoriteCoreData.shared.fetchDataFromCoreData()
+                    print("Leagues in Core Data after adding:")
+                for league in FavoriteCoreData.shared.favoriteLeagues {
+                    if let leagueName = league["league_name"] as? String {
+                    print("- \(leagueName)")
+                    }
                 }
+                        
             }
-                    
         }
     }
-}
     
     func reloadTeamData(list: [Team]) {
         self.team = list
@@ -131,6 +130,10 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
         print(lastLeagueDetails?.count)
         collectionView.reloadData()
     }
+    //add alert
+    func showFavoriteLeagueSavedSuccess() {
+            print("done")
+        }
     
     func showError(message: String) {
         print("Error: \(message)")

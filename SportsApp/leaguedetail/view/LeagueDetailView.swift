@@ -12,6 +12,7 @@ protocol LeagueDetailView : AnyObject
     func reloadTeamData(list : [Team])
     func reloadUpcomingLeagueData(list : [LeagueDetails])
     func reloadLastLeaguesData(list : [LeagueDetails])
+    func showFavoriteLeagueSavedSuccess()
     func showError(message: String)
 
 }

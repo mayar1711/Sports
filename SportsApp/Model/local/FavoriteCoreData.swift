@@ -16,42 +16,47 @@ class FavoriteCoreData{
     
     private init() {}
     
-    func saveToCoreData(_ dataArray: [[String: Any]]) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        for leaguesData in dataArray {
-            guard let leagueName = leaguesData["league_name"] as? String,
-                  let leagueLogo = leaguesData["league_logo"] as? String,
-                  let leagueKey = leaguesData["league_key"] as? Int
-            else {
-                continue
+    func saveToCoreData(_ dataArray: [[String: Any]], completion: @escaping (Bool, Error?) -> Void) {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                completion(false, NSError(domain: "AppDelegateNotFound", code: -1, userInfo: nil))
+                return
             }
             
-            let fetchRequest: NSFetchRequest<FavoriteLeagues> = FavoriteLeagues.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "leagueName == %@", leagueName)
+            let managedContext = appDelegate.persistentContainer.viewContext
             
-            do {
-                let existingLeagues = try managedContext.fetch(fetchRequest)
-                
-                if existingLeagues.isEmpty {
-                    let fav = FavoriteLeagues(context: managedContext)
-                    fav.leagueKey = NSDecimalNumber(value: leagueKey)
-                    fav.leagueLogo = leagueLogo
-                    fav.leagueName = leagueName
-                    
-                    try managedContext.save()
-                    print("League \(leagueName) saved to Core Data.")
-                } else {
-                    print("League \(leagueName) already exists in Core Data. Skipping save.")
+            for leaguesData in dataArray {
+                guard let leagueName = leaguesData["league_name"] as? String,
+                      let leagueLogo = leaguesData["league_logo"] as? String,
+                      let leagueKey = leaguesData["league_key"] as? Int
+                else {
+                    continue
                 }
-            } catch {
-                print("Error fetching data from Core Data: \(error.localizedDescription)")
+                
+                let fetchRequest: NSFetchRequest<FavoriteLeagues> = FavoriteLeagues.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "leagueName == %@", leagueName)
+                
+                do {
+                    let existingLeagues = try managedContext.fetch(fetchRequest)
+                    
+                    if existingLeagues.isEmpty {
+                        let fav = FavoriteLeagues(context: managedContext)
+                        fav.leagueKey = NSDecimalNumber(value: leagueKey)
+                        fav.leagueLogo = leagueLogo
+                        fav.leagueName = leagueName
+                        
+                        try managedContext.save()
+                        print("League \(leagueName) saved to Core Data.")
+                    } else {
+                        print("League \(leagueName) already exists in Core Data. Skipping save.")
+                    }
+                } catch {
+                    completion(false, error)
+                    continue
+                }
             }
+            
+            completion(true, nil)
         }
-    }
     
     func fetchDataFromCoreData() {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {

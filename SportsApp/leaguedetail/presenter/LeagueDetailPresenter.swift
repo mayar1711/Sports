@@ -93,4 +93,14 @@ class LeagueDetailPresenter {
             }
         }
     }
+    
+    func saveFavoriteLeague(leagueData: [String: Any]) {
+            FavoriteCoreData.shared.saveToCoreData([leagueData]) { success, error in
+                if let error = error {
+                    self.view?.showError(message: error.localizedDescription)
+                } else if success {
+                    self.view?.showFavoriteLeagueSavedSuccess()
+                }
+            }
+    }
 }
