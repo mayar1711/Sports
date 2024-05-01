@@ -26,7 +26,9 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
     var lastLeagueDetails: [LeagueDetails]?
     
     let reachability = try! Reachability()
-
+    
+    var isFavorite: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         try? reachability.startNotifier()
@@ -38,17 +40,23 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                     }
                 }
                 
-                reachability.whenUnreachable = { _ in
-                    print("Network is not reachable")
-                    let alert = UIAlertController(title: "No Internet Connection", message: "Please check your internet connection and try again.", preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: "OK", style: .default) { _ in
-                        // Dismiss the view controller and go back to the previous screen
-                        self.navigationController?.popViewController(animated: true)
-                    }
-                    alert.addAction(okAction)
-                    self.present(alert, animated: true, completion: nil)
-                }
-                fetchData()
+        reachability.whenUnreachable = { _ in
+            print("Network is not reachable")
+            
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+            
+            // Show alert
+            let alert = UIAlertController(title: "No Internet Connection", message: "Please check your internet connection and try again.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+                self.navigationController?.popViewController(animated: true)
+            }
+            alert.addAction(okAction)
+            self.present(alert, animated: true, completion: nil)
+        }
+
+        fetchData()
         
         let heartImage = UIImage(systemName: "heart")
         let favoriteButton = UIBarButtonItem(image: heartImage, style: .plain, target: self, action: #selector(favoriteButtonTapped))
@@ -61,80 +69,87 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
                 
         // Register header
         collectionView?.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
-        
-    
-                        
-        
-//                leagueDetailPresenter = LeagueDetailPresenter(view: self)
-//                leagueDetailPresenter.fetchLastLeaguesData(forSport: sportName, leagueKey: leagueKey)
-//                leagueDetailPresenter.fetchUpcomingLeagueData(forSport: sportName, leagueKey: leagueKey)
-//                leagueDetailPresenter.fetchData(forSport: sportName, forId: leagueKey)
                 
-                let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
-                    switch sectionIndex {
-                    case 0:
-                        return self.createTopSectionLayout()
-                    case 1:
-                        return self.createSecondSectionLayout()
-                    case 2:
-                        return self.createThirdSectionLayout()
-                    default:
-                        return nil
-                    }
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
+            switch sectionIndex {
+                case 0:
+                    return self.createTopSectionLayout()
+                case 1:
+                    return self.createSecondSectionLayout()
+                case 2:
+                    return self.createThirdSectionLayout()
+                default:
+                    return nil
                 }
-                layout.configuration.interSectionSpacing = 30
-                collectionView.collectionViewLayout = layout
+        }
+        layout.configuration.interSectionSpacing = 30
+        collectionView.collectionViewLayout = layout
                 
-                if let customFlowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
-                    customFlowLayout.scrollDirection = .vertical
-                }
+        if let customFlowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+        customFlowLayout.scrollDirection = .vertical
+        }
+        
+        
+        if let leagueKey = leagueKey, let leagueName = leagueName {
+                isFavorite = FavoriteCoreData.shared.isLeagueInFavorites(leagueKey: leagueKey, leagueName: leagueName)
+        }
+        
+        configureHeartButtonTint()
     }
     
     func fetchData() {
-            // Fetch data when network is available
-            leagueDetailPresenter = LeagueDetailPresenter(view: self)
-            leagueDetailPresenter.fetchLastLeaguesData(forSport: sportName, leagueKey: leagueKey)
-            leagueDetailPresenter.fetchUpcomingLeagueData(forSport: sportName, leagueKey: leagueKey)
-            leagueDetailPresenter.fetchData(forSport: sportName, forId: leagueKey)
+        leagueDetailPresenter = LeagueDetailPresenter(view: self)
+        leagueDetailPresenter.fetchLastLeaguesData(forSport: sportName, leagueKey: leagueKey)
+        leagueDetailPresenter.fetchUpcomingLeagueData(forSport: sportName, leagueKey: leagueKey)
+        leagueDetailPresenter.fetchData(forSport: sportName, forId: leagueKey)
             
-            // Other data fetching code...
         }
     
+    func configureHeartButtonTint() {
+        let heartImage = UIImage(systemName: "heart")
+        let favoriteButton = UIBarButtonItem(image: heartImage, style: .plain, target: self, action: #selector(favoriteButtonTapped))
+        
+        if isFavorite {
+            favoriteButton.tintColor = .red
+        }
+        
+        navigationItem.rightBarButtonItem = favoriteButton
+    }
+    
     @objc func favoriteButtonTapped() {
-            if let favoriteButton = navigationItem.rightBarButtonItem {
-               if favoriteButton.tintColor == .red {
-                   favoriteButton.tintColor = nil
-               } else {
-                   favoriteButton.tintColor = .red
-                   print("before if.")
+        if let favoriteButton = navigationItem.rightBarButtonItem {
+            if favoriteButton.tintColor == .red {
+                favoriteButton.tintColor = nil
+            } else {
+                favoriteButton.tintColor = .red
+                print("before if.")
                
-
                  if let leagueKey = leagueKey {
-                            if let leagueName = leagueName {
-                                if let leagueLogo = leagueImage {
-                                    print("inside if.")
-                                    print("leagueKey = \(leagueKey)")
-                                    print("leagueLogo = \(leagueLogo)")
-                                    print("leagueName = \(leagueName)")
-                                    print("sportName = \(sportName ?? "hhh")")
-                                    print("Inside if.")
-                                    let leagueData: [String: Any] = [
-                                        "league_name": leagueName,
-                                        "league_logo": leagueLogo,
-                                        "league_key": leagueKey,
-                                        "sportName" : sportName!
-                                    ]
-                                    leagueDetailPresenter.saveFavoriteLeague(leagueData: leagueData)
-                                     print("Data is inserted.")
-                                } else {
-                                    print("League logo is nil.")
-                                }
-                            } else {
-                                print("League name is nil.")
-                            }
+                    if let leagueName = leagueName {
+                        if let leagueLogo = leagueImage {
+                            print("inside if.")
+                            print("leagueKey = \(leagueKey)")
+                            print("leagueLogo = \(leagueLogo)")
+                            print("leagueName = \(leagueName)")
+                            print("sportName = \(sportName ?? "hhh")")
+                            print("Inside if.")
+                            let leagueData: [String: Any] = [
+                            "league_name": leagueName,
+                            "league_logo": leagueLogo,
+                            "league_key": leagueKey,
+                            "sportName" : sportName!
+                            ]
+                            leagueDetailPresenter.saveFavoriteLeague(leagueData: leagueData)
+                            print("Data is inserted.")
                         } else {
-                            print("League key is nil.")
-                        }
+                            print("League logo is nil.")
+                            }
+                    } else {
+                        print("League name is nil.")
+                     }
+                } else {
+                    print("League key is nil.")
+                    }
 
                       FavoriteCoreData.shared.fetchDataFromCoreData()
                     print("Leagues in Core Data after adding:")
@@ -278,7 +293,7 @@ class LeagueDetailsCollectionViewController: UICollectionViewController,LeagueDe
             return lastLeagueDetails?.count ?? 0
         }
         else {
-            return team?.count ?? 1
+            return team?.count ?? 0
         }
     }
 

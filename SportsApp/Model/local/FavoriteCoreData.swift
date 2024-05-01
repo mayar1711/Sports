@@ -104,6 +104,24 @@ class FavoriteCoreData{
             print("Error deleting league from Core Data: \(error.localizedDescription)")
         }
     }
+    
+    func isLeagueInFavorites(leagueKey: Int, leagueName: String) -> Bool {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                return false
+            }
+            let managedContext = appDelegate.persistentContainer.viewContext
+            
+            let fetchRequest: NSFetchRequest<FavoriteLeagues> = FavoriteLeagues.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "leagueName == %@ AND leagueKey == %@", leagueName, NSNumber(value: leagueKey))
+            
+            do {
+                let existingLeagues = try managedContext.fetch(fetchRequest)
+                return !existingLeagues.isEmpty
+            } catch {
+                print("Error checking league in favorites: \(error.localizedDescription)")
+                return false
+            }
+        }
 
     
 }

@@ -181,6 +181,7 @@ class FavoriteTableViewController: UITableViewController , FavoriteViewProtocol 
             if let league = presenter.league(at: indexPath.row) {
                 leagueDetailsVC.sportName = league["sportName"] as? String
                 leagueDetailsVC.leagueKey = league["league_key"] as? Int
+                leagueDetailsVC.leagueName = league["league_name"] as? String
                 navigationController?.pushViewController(leagueDetailsVC, animated: true)
             }
         }
