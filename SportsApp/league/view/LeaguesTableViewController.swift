@@ -127,17 +127,17 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
         let imageSize = CGSize(width: 60, height: 60)
         cell.imageView?.frame = CGRect(origin: .zero, size: imageSize)
         
-        if let imageURL = URL(string: league?.leagueLogo ?? "") {
-            let processor = DownsamplingImageProcessor(size: imageSize)
-            cell.imageView?.kf.indicatorType = .activity
-            cell.imageView?.kf.setImage(
-                with: imageURL,
-                options: [
-                    .processor(processor),
-                    .scaleFactor(UIScreen.main.scale),
-                    .transition(.fade(1)),
-                    .cacheOriginalImage
-                ],
+        if let leagueLogoURLString = league?.leagueLogo, let imageURL = URL(string: leagueLogoURLString) {
+                let processor = DownsamplingImageProcessor(size: imageSize)
+                cell.imageView?.kf.indicatorType = .activity
+                cell.imageView?.kf.setImage(
+                    with: imageURL,
+                    options: [
+                        .processor(processor),
+                        .scaleFactor(UIScreen.main.scale),
+                        .transition(.fade(1)),
+                        .cacheOriginalImage
+                    ],
                 completionHandler: { result in
                     switch result {
                     case .success(let value):
@@ -149,6 +149,9 @@ class LeaguesTableViewController: UITableViewController , LeagueView{
                     }
                 }
             )
+        }else {
+            
+            cell.imageView?.image = UIImage(named: "league")
         }
         
         return cell

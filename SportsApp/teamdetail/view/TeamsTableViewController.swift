@@ -63,9 +63,9 @@ class TeamsTableViewController: UITableViewController , TeamDetailsView {
                 cell.textLabel?.text = player.player_name
                 cell.detailTextLabel?.text = player.player_type
                 if let imageURLString = player.player_image, let imageURL = URL(string: imageURLString) {
-                    cell.imageView?.kf.setImage(with: imageURL, placeholder: UIImage(named: "defaultPlayerImage"))
+                    cell.imageView?.kf.setImage(with: imageURL, placeholder: UIImage(named: "player"))
                 } else {
-                    cell.imageView?.image = UIImage(named: "defaultPlayerImage")
+                    cell.imageView?.image = UIImage(named: "player")
                 }
             }
         }
