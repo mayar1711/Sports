@@ -67,7 +67,36 @@ final class MockNetworkServicesTest: XCTestCase {
                 expectation.fulfill()
             }
         }
+        waitForExpectations(timeout: 5)
+    }
+    
+    
+    
+    func testFetchLeaguesDetailSuccess() {
+        let mockNetworkServices = MockNetworkServices(shouldResultError: false)
+        let expectation = self.expectation(description: "Fetching leagues detail")
         
+        mockNetworkServices.fetchLeaguesDetails(forSport: "football", forLeagueDetail: 270, from:"24-04-23", to: "2024-04-26"){
+            _, error in
+            if let error = error {
+                XCTFail("Error: \(error.localizedDescription)")
+            } else {
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 5)
+    }
+
+    func testFetchLeaguesDetailError() {
+        let mockNetworkServices = MockNetworkServices(shouldResultError: true)
+        let expectation = self.expectation(description: "Fetching leagues detail")
+        mockNetworkServices.fetchLeaguesDetails(forSport: "football", forLeagueDetail: 270, from:"24-04-23", to: "2024-04-26") { _, error in
+            if let error = error {
+                XCTFail("Error: \(error.localizedDescription)")
+            } else {
+                expectation.fulfill()
+            }
+        }
         waitForExpectations(timeout: 5)
     }
 

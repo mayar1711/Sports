@@ -92,6 +92,52 @@ class MockNetworkServices {
             ]
         ]
     ]
+    
+    let LeaguesDetailFakeJsonObj: [String: Any] = [
+        "success": 1,
+        "result": [
+            [
+                "event_key": 1243302,
+                "event_date": "2024-04-26",
+                "event_time": "20:45",
+                "event_home_team": "Frosinone",
+                "home_team_key": 5000,
+                "event_away_team": "Salernitana",
+                "away_team_key": 5012,
+                "event_halftime_result": "2 - 0",
+                "event_final_result": "3 - 0",
+                "event_ft_result": "3 - 0",
+                "event_penalty_result": "",
+                "event_status": "Finished",
+                "country_name": "Italy",
+                "league_name": "Serie A",
+                "league_key": 207,
+                "league_round": "Round 34",
+                "league_season": "2023/2024",
+                "event_live": "0",
+                "event_stadium": "Stadio Benito Stirpe (Frosinone)",
+                "event_referee": "F. Fourneau",
+                "home_team_logo": "https://apiv2.allsportsapi.com/logo/5000_frosinone.jpg",
+                "away_team_logo": "https://apiv2.allsportsapi.com/logo/5012_salernitana.jpg",
+                "event_country_key": 5,
+                "league_logo": "https://apiv2.allsportsapi.com/logo/logo_leagues/207_serie-a.png",
+                "country_logo": "https://apiv2.allsportsapi.com/logo/logo_country/5_italy.png",
+                "event_home_formation": "3-4-1-2",
+                "event_away_formation": "3-4-3",
+                "fk_stage_key": 331,
+                "stage_name": "Current",
+                "league_group": nil,
+                "goalscorers": [],
+                "substitutes": [],
+                "cards": [],
+                "vars": [:],
+                "lineups": [:],
+                "statistics": []
+            ]
+        ]
+    ]
+    
+    
 
     
 }
@@ -133,6 +179,26 @@ extension MockNetworkServices{
             completion(nil, error)
         }
     }
-
     
+    
+    func fetchLeaguesDetails(forSport sport: String, forLeagueDetail detail: Int, from dateFrom: String, to dateTo: String, completion: @escaping ([LeagueDetails]?, Error?) -> Void) {
+       // let fakeLeagueDetails: [LeagueDetails] = []
+        
+        if sport == "invalid_sport" {
+            completion(nil, NSError(domain: "MockNetworkServicesError", code: -1, userInfo: nil))
+            return
+        }
+        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: LeaguesDetailFakeJsonObj) else {
+            completion(nil, NSError(domain: "MockNetworkServicesError", code: -1, userInfo: nil))
+            return
+        }
+        
+        do {
+            let result = try JSONDecoder().decode(LeagueDetailsResponse.self, from: jsonData)
+            completion(result.result, nil)
+        } catch {
+            completion(nil, error)
+        }
+    }
 }
