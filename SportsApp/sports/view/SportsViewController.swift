@@ -45,8 +45,9 @@ class SportsViewController: UIViewController , UICollectionViewDataSource , UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 150, height: 240)
-    }
+            return CGSize(width: 150, height: 280)
+        }
+
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedSportName = sportsNames[indexPath.item]
